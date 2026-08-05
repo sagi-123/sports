@@ -1053,6 +1053,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 rating: selectedRating,
                 review_text: document.getElementById('review-text').value.trim(),
                 approved: false,
+                status: 'pending',
                 created_at: new Date().toISOString()
             };
 
@@ -1668,7 +1669,7 @@ async function loadAndInitReviews() {
             const dbTexts = new Set(customReviews.map(r => (r.review_text || r.text || '').trim()));
             const localOnly = localReviews.filter(r => {
                 const text = (r.review_text || r.text || '').trim();
-                const isApproved = !r.status || r.status.toLowerCase() === 'approved';
+                const isApproved = r.approved === true || (r.status && r.status.toLowerCase() === 'approved');
                 return text && !dbTexts.has(text) && isApproved;
             });
             customReviews = [...customReviews, ...localOnly];
