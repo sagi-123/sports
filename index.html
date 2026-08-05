@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexElite | Premium Sports Arena & Turf</title>
+    <meta name="description" content="ApexElite | Premium sports arenas, turf bookings, and state-of-the-art facilities.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=15.0">
+</head>
+<body class="light-theme">
+
+    <!-- Auth Modal (Kept 100% intact for Supabase & script.js) -->
+    <div id="auth-modal" class="auth-modal-overlay" style="display:none;">
+        <div class="auth-modal-card glass-modal">
+            <button id="close-auth-modal" class="auth-close"><i class="fas fa-times"></i></button>
+
+            <!-- Tabs -->
+            <div class="auth-tabs">
+                <button class="auth-tab active" data-tab="signin">Sign In</button>
+                <button class="auth-tab" data-tab="signup">Sign Up</button>
+            </div>
+
+            <!-- Sign In Form -->
+            <div id="tab-signin" class="auth-form-section">
+                <h2 class="auth-title">Welcome <span class="text-emerald">Back</span></h2>
+                <p class="auth-subtitle">Sign in to your ApexElite account</p>
+
+                <!-- OAuth Buttons -->
+                <div class="oauth-buttons">
+                    <button id="google-signin-btn" class="btn-oauth btn-google">
+                        <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                </div>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                    <span>or sign in with email</span>
+                </div>
+
+                <form id="signin-form">
+                    <div class="form-group">
+                        <label for="signin-email">Email Address</label>
+                        <input type="email" id="signin-email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signin-password">Password</label>
+                        <input type="password" id="signin-password" placeholder="Your password" required>
+                    </div>
+                    <button type="submit" id="signin-btn" class="btn btn-emerald btn-block" style="margin-top:8px;">
+                        Sign In <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <p id="signin-msg" style="margin-top:12px;font-size:0.9rem;min-height:20px;text-align:center;"></p>
+                </form>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="tab-signup" class="auth-form-section" style="display:none;">
+                <h2 class="auth-title">Join <span class="text-emerald">ApexElite</span></h2>
+                <p class="auth-subtitle">Create your member account</p>
+
+                <!-- OAuth Buttons -->
+                <div class="oauth-buttons">
+                    <button id="google-signup-btn" class="btn-oauth btn-google">
+                        <svg class="oauth-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                </div>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                    <span>or sign up with email</span>
+                </div>
+
+                <form id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-name">Full Name</label>
+                        <input type="text" id="signup-name" placeholder="Your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email Address</label>
+                        <input type="email" id="signup-email" placeholder="your@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Min. 6 characters" required minlength="6">
+                    </div>
+                    <button type="submit" id="signup-btn" class="btn btn-emerald btn-block" style="margin-top:8px;">
+                        Create Account <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <p id="signup-msg" style="margin-top:12px;font-size:0.9rem;min-height:20px;text-align:center;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         TOP FESTIVE OFFER BANNER ABOVE NAVBAR
+         ═══════════════════════════════════════════════════ -->
+    <div id="top-festive-bar" class="top-festive-bar hidden">
+        <div class="festive-bar-content">
+            <span class="festive-badge"><i class="fas fa-gift"></i> FESTIVE OFFER</span>
+            <span class="festive-text">
+                🎉 Special Deal: Get <strong>20% OFF</strong> on all Slot Bookings! Use Code: <span class="festive-code">FESTIVE20</span>
+            </span>
+            <button class="festive-cta-btn open-slots">
+                Claim Offer <i class="fas fa-bolt"></i>
+            </button>
+        </div>
+        <button id="close-festive-bar" class="festive-close-btn" aria-label="Close offer banner">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════
+         TOP NAVIGATION BAR
+         ═══════════════════════════════════════════════════ -->
+    <header class="nav-wrapper">
+        <nav class="navbar floating-navbar">
+            <div class="nav-container">
+                <!-- Left: Premium Logo -->
+                <a href="#home" class="logo">
+                    <span class="logo-icon"><i class="fas fa-futbol"></i></span>
+                    <span class="logo-text">APEX<span class="text-emerald">ELITE</span></span>
+                </a>
+
+                <!-- Center Nav Links -->
+                <ul class="nav-links">
+                    <li><a href="#home" class="active">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#facilities">Facilities</a></li>
+                    <li><a href="#book-slot">Book Slot</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="#testimonials">Testimonials</a></li>
+                </ul>
+
+                <!-- Right Action Area -->
+                <div class="nav-right-actions">
+                    <div id="nav-auth-area" style="display:inline-flex;align-items:center;gap:12px;"></div>
+
+                    <button class="btn btn-emerald nav-book-now open-slots">
+                        Book Now
+                    </button>
+
+                    <div class="hamburger">
+                        <i class="fas fa-bars"></i>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════
+         HERO SECTION — SPLIT LAYOUT
+         ═══════════════════════════════════════════════════ -->
+
+    <section id="home" class="hero-section">
+
+        <!-- LEFT: White Content Panel -->
+        <div class="hero-left-panel">
+            <span class="hero-eyebrow">⚽ PREMIUM SPORTS TURF</span>
+
+            <h1 class="hero-title">
+                <span class="title-line-1">YOUR GAME.</span>
+                <span class="title-line-2">YOUR TURF.</span>
+                <span class="title-line-3 handwritten">Your Time.</span>
+            </h1>
+
+            <p class="hero-description">
+                Experience the best-in-class sports turfs<br>built for performance, passion and memories.
+            </p>
+
+            <div class="hero-cta-group">
+                <button class="btn btn-emerald open-slots" id="hero-book-slot-btn">
+                    <i class="fas fa-calendar-check"></i> Book Your Slot
+                </button>
+                <a href="#facilities" class="btn btn-outline-emerald btn-hero-explore">
+                    Explore Facilities
+                </a>
+            </div>
+
+            <!-- Stats Cards Row -->
+            <div class="hero-stats-cards-row">
+                <div class="stat-card-item">
+                    <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-card-text">
+                        <span class="stat-card-num" data-target="10000">10K+</span>
+                        <span class="stat-card-lbl">Happy Players</span>
+                    </div>
+                </div>
+                <div class="stat-card-item">
+                    <div class="stat-card-icon"><i class="fas fa-shield-alt"></i></div>
+                    <div class="stat-card-text">
+                        <span class="stat-card-num">5</span>
+                        <span class="stat-card-lbl">Premium Turfs</span>
+                    </div>
+                </div>
+                <div class="stat-card-item">
+                    <div class="stat-card-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-card-text">
+                        <span class="stat-card-num">50+</span>
+                        <span class="stat-card-lbl">Tournaments</span>
+                    </div>
+                </div>
+                <div class="stat-card-item">
+                    <div class="stat-card-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-card-text">
+                        <span class="stat-card-num">4.9</span>
+                        <span class="stat-card-lbl">Google Rating</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Clean Panel — Photo Cards + Booking Card -->
+        <div class="hero-right-visual">
+
+            <!-- Scattered Polaroid Photo Cards -->
+            <div class="photo-card photo-card-1">
+                <img src="assets/hero_friends_playing.png" alt="Friends playing football on turf">
+            </div>
+            <div class="photo-card photo-card-2">
+                <img src="assets/hero_night_turf.png" alt="Football turf at night with LED floodlights">
+            </div>
+            <div class="photo-card photo-card-3">
+                <img src="assets/hero_trophy.png" alt="Championship trophy on football turf">
+            </div>
+
+            <!-- Floating Booking Card -->
+            <div class="floating-booking-card">
+                <h3 class="booking-card-title">
+                    <i class="fas fa-calendar-check text-emerald"></i> BOOK YOUR GAME
+                </h3>
+                <div class="booking-card-form">
+                    <div class="form-field">
+                        <label for="hero-date-input">
+                            <i class="fas fa-calendar-day text-emerald"></i> Select Date
+                        </label>
+                        <input type="date" id="hero-date-input" class="card-input">
+                    </div>
+                    <div class="form-field">
+                        <label for="hero-time-select">
+                            <i class="fas fa-clock text-emerald"></i> Select Time
+                        </label>
+                        <select id="hero-time-select" class="card-input">
+                            <option>06:00 AM – 07:00 AM</option>
+                            <option>07:00 AM – 08:00 AM</option>
+                            <option>05:00 PM – 06:00 PM</option>
+                            <option selected>07:00 PM – 08:00 PM</option>
+                            <option>09:00 PM – 10:00 PM</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="hero-players-select">
+                            <i class="fas fa-users text-emerald"></i> Players
+                        </label>
+                        <select id="hero-players-select" class="card-input">
+                            <option>5 v 5 (10 Players)</option>
+                            <option>7 v 7 (14 Players)</option>
+                            <option>Individual Court</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-emerald btn-block open-slots" id="hero-check-availability-btn">
+                        CHECK AVAILABILITY
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- END hero-right-visual -->
+
+    </section>
+
+
+
+
+
+
+    <!-- ═══════════════════════════════════════════════════
+         ABOUT US SECTION (TWO-COLUMN LAYOUT)
+         ═══════════════════════════════════════════════════ -->
+
+    <section id="about" class="about-section">
+        <div class="section-container">
+            <div class="about-grid">
+                
+                <!-- LEFT COLUMN: Continuous Auto-Changing Facility Slideshow + Dark Promo Card -->
+                <div class="about-left-col reveal-up">
+                    <div class="about-image-frame">
+                        <!-- Continuous Image Slider Container -->
+                        <div class="about-slider-container">
+                            <div class="about-slide active" data-caption="⚽ TURF FOOTBALL">
+                                <img src="assets/about_turf_football.png" alt="Friends playing football on turf">
+                            </div>
+                            <div class="about-slide" data-caption="🏸 BADMINTON COURTS">
+                                <img src="assets/about_badminton.png" alt="Badminton matches">
+                            </div>
+                            <div class="about-slide" data-caption="🏏 BOX CRICKET ARENA">
+                                <img src="assets/about_box_cricket.png" alt="Box cricket arena">
+                            </div>
+                            <div class="about-slide" data-caption="☕ SPORTS CAFETERIA & LOUNGE">
+                                <img src="assets/about_cafeteria.png" alt="Sports cafeteria lounge">
+                            </div>
+                            <div class="about-slide" data-caption="🏋️ FITNESS & GYM FACILITY">
+                                <img src="assets/about_gym.png" alt="Fitness gym facility">
+                            </div>
+
+                            <!-- Live Facility Badge Overlay -->
+                            <div class="about-slider-badge">
+                                <span class="badge-dot"></span>
+                                <span id="about-badge-text">⚽ TURF FOOTBALL</span>
+                            </div>
+
+                            <!-- Slide Indicators -->
+                            <div class="about-slider-dots">
+                                <span class="dot active" data-index="0"></span>
+                                <span class="dot" data-index="1"></span>
+                                <span class="dot" data-index="2"></span>
+                                <span class="dot" data-index="3"></span>
+                                <span class="dot" data-index="4"></span>
+                            </div>
+                        </div>
+
+                        <!-- Floating Dark Promotional Card (~30% bottom-left overlay) -->
+                        <div class="dark-promo-card-overlay">
+                            <h4 class="promo-card-title">
+                                WEEKEND GAMES<br>ARE BETTER<br><span class="text-emerald">WITH FRIENDS!</span>
+                            </h4>
+                            <p class="promo-card-desc">
+                                Gather your squad and make it a match to remember.
+                            </p>
+                            <button class="btn btn-emerald btn-round open-slots">
+                                PLAY TOGETHER →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN: Heading, Desc, Feature Icons, CTA -->
+                <div class="about-right-col reveal-up delay-1">
+                    <span class="section-badge">ABOUT US</span>
+                    
+                    <h2 class="about-heading">
+                        More Than Just<br>
+                        <span class="text-black">A Playing Field</span>
+                    </h2>
+
+                    <p class="about-text">
+                        ApexElite was created for athletes, weekend warriors, and sports lovers who demand perfection. From international FIFA-spec turf to professional LED lighting and immaculate facilities, we deliver an unforgettable playing environment designed for maximum energy, safety, and camaraderie.
+                    </p>
+
+                    <div class="about-features-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon-circle"><i class="fas fa-award"></i></div>
+                            <span class="feature-item-title">FIFA Approved Turf</span>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle"><i class="fas fa-lightbulb"></i></div>
+                            <span class="feature-item-title">LED Flood Lighting</span>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle"><i class="fas fa-shower"></i></div>
+                            <span class="feature-item-title">Clean & Spacious Facilities</span>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-icon-circle"><i class="fas fa-shield-virus"></i></div>
+                            <span class="feature-item-title">Safe & Secure Environment</span>
+                        </div>
+                    </div>
+
+                    <a href="#facilities" class="btn btn-emerald btn-large">
+                        Know More About Us <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         FACILITIES SECTION
+         ═══════════════════════════════════════════════════ -->
+    <section id="facilities" class="facilities-section">
+        <div class="section-container">
+            <div class="section-header text-center reveal-up">
+                <h2 class="section-title">
+                    Everything You Need, <span class="text-emerald">Right Here</span>
+                </h2>
+                <p class="section-subtitle-text">World-class pitches, courts, and amenities built to professional standards.</p>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="facility-filters reveal-up">
+                <button class="filter-btn active" data-filter="all">All Facilities</button>
+                <button class="filter-btn" data-filter="turf">Turf Fields</button>
+                <button class="filter-btn" data-filter="court">Hardwood Courts</button>
+                <button class="filter-btn" data-filter="amenities">Amenities</button>
+            </div>
+
+            <!-- All Facilities in One Horizontal Line (Scrollable Row with Mouse Tilt) -->
+            <div class="facilities-cards-row">
+                
+                <!-- 1. Badminton Court (FIRST & ACTIVE) -->
+                <div class="facility-card white-card tilt-card" data-category="court" data-sport="Badminton">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Badminton Court">
+                        <div class="fac-icon-circle"><i class="fas fa-feather-alt"></i></div>
+                        <span class="fac-badge active-badge">AVAILABLE NOW</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Badminton Court</h3>
+                        <p class="fac-desc">BWF-standard synthetic mat and hardwood indoor courts with anti-glare overhead lighting.</p>
+                        <button class="btn btn-emerald btn-block open-slots" data-sport="Badminton">
+                            Book Slot <i class="fas fa-calendar-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. Football Turf (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="turf" data-sport="Football">
+                    <div class="fac-img-container">
+                        <img src="assets/football_action.png" alt="Football Turf">
+                        <div class="fac-icon-circle"><i class="fas fa-futbol"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Football Turf</h3>
+                        <p class="fac-desc">FIFA-certified 5v5 and 7v7 synthetic turf with high shock absorption and night floodlights.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. Cricket Nets (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="turf" data-sport="Cricket">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Cricket Nets">
+                        <div class="fac-icon-circle"><i class="fas fa-baseball-ball"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Cricket Nets</h3>
+                        <p class="fac-desc">Pro-spec turf pitches with protective netting, bowling machine slots, and high illumination.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. Basketball Court (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="court">
+                    <div class="fac-img-container">
+                        <img src="assets/basketball_action.png" alt="Basketball Court">
+                        <div class="fac-icon-circle"><i class="fas fa-basketball-ball"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Basketball Court</h3>
+                        <p class="fac-desc">FIBA regulation hardwood indoor court with professional glass backboards & cushions.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. Volleyball Court (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="court">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Volleyball Court">
+                        <div class="fac-icon-circle"><i class="fas fa-volleyball-ball"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Volleyball Court</h3>
+                        <p class="fac-desc">Indoor anti-slip rubber floor court with professional net tensioning systems.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6. Tennis Court (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="court">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tennis Court">
+                        <div class="fac-icon-circle"><i class="fas fa-table-tennis"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Tennis Court</h3>
+                        <p class="fac-desc">ITF specification hard acrylic synthetic tennis courts with night lighting.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 7. Swimming Pool (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="amenities">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Swimming Pool">
+                        <div class="fac-icon-circle"><i class="fas fa-swimmer"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Olympic Swimming Pool</h3>
+                        <p class="fac-desc">Temperature-controlled 8-lane lap pool with certified lifeguard supervision.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 8. Sports Cafeteria (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="amenities">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Sports Cafeteria">
+                        <div class="fac-icon-circle"><i class="fas fa-utensils"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Sports Cafeteria</h3>
+                        <p class="fac-desc">Healthy smoothies, protein snacks, fresh juices, and seating lounge for players.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 9. Gym & Fitness (LAUNCHING SOON) -->
+                <div class="facility-card white-card tilt-card launching-card" data-category="amenities">
+                    <div class="fac-img-container">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gym & Fitness">
+                        <div class="fac-icon-circle"><i class="fas fa-dumbbell"></i></div>
+                        <span class="fac-badge soon-badge"><i class="fas fa-rocket"></i> LAUNCHING SOON</span>
+                    </div>
+                    <div class="fac-card-content">
+                        <h3 class="fac-title">Gym & Fitness Zone</h3>
+                        <p class="fac-desc">State-of-the-art strength, cardio, and warm-up equipment for pre-match prep.</p>
+                        <button class="btn btn-secondary btn-block btn-soon" disabled>
+                            Launching Soon
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         BOOK SLOT SECTION & PRICING
+         ═══════════════════════════════════════════════════ -->
+    <section id="book-slot" class="book-slot-section">
+        <div class="section-container">
+            <div class="book-slot-grid">
+                
+                <!-- LEFT: Large Black Promotional Card -->
+                <div class="slot-promo-card reveal-up">
+                    <div class="slot-promo-content">
+                        <span class="slot-badge">RESERVE YOUR TIME</span>
+                        <h2 class="slot-promo-title">
+                            Play When<br>
+                            <span class="text-emerald">You Want!</span>
+                        </h2>
+                        <p class="slot-promo-desc">
+                            Select your favorite sport, choose your preferred timing, and instant-book online with real-time slot availability.
+                        </p>
+                        <button class="btn btn-emerald btn-large open-slots">
+                            View Full Schedule <i class="fas fa-calendar-check"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Four Premium Pricing Cards -->
+                <div class="pricing-cards-grid reveal-up delay-1">
+                    
+                    <!-- Morning Slot -->
+                    <div class="pricing-card white-card">
+                        <div class="pricing-header">
+                            <i class="fas fa-sun slot-icon"></i>
+                            <h3 class="slot-name">Morning Slot</h3>
+                            <span class="slot-time">06:00 AM - 12:00 PM</span>
+                        </div>
+                        <div class="price-val">₹600 <span class="per-hr">/ hr</span></div>
+                        <button class="btn btn-outline-emerald open-slots">Book Slot</button>
+                    </div>
+
+                    <!-- Evening Slot -->
+                    <div class="pricing-card white-card">
+                        <div class="pricing-header">
+                            <i class="fas fa-cloud-sun slot-icon"></i>
+                            <h3 class="slot-name">Evening Slot</h3>
+                            <span class="slot-time">04:00 PM - 08:00 PM</span>
+                        </div>
+                        <div class="price-val">₹900 <span class="per-hr">/ hr</span></div>
+                        <button class="btn btn-outline-emerald open-slots">Book Slot</button>
+                    </div>
+
+                    <!-- Night Slot -->
+                    <div class="pricing-card white-card">
+                        <div class="pricing-header">
+                            <i class="fas fa-moon slot-icon"></i>
+                            <h3 class="slot-name">Night Slot</h3>
+                            <span class="slot-time">08:00 PM - 12:00 AM</span>
+                        </div>
+                        <div class="price-val">₹1200 <span class="per-hr">/ hr</span></div>
+                        <button class="btn btn-outline-emerald open-slots">Book Slot</button>
+                    </div>
+
+                    <!-- Weekend Slot (Highlighted in Emerald Green) -->
+                    <div class="pricing-card weekend-highlight-card">
+                        <div class="popular-badge">MOST POPULAR</div>
+                        <div class="pricing-header">
+                            <i class="fas fa-glass-cheers slot-icon"></i>
+                            <h3 class="slot-name">Weekend Slot</h3>
+                            <span class="slot-time">Saturday & Sunday Prime</span>
+                        </div>
+                        <div class="price-val">₹1500 <span class="per-hr">/ hr</span></div>
+                        <button class="btn btn-white-solid open-slots">Book Slot</button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         GALLERY SECTION (TRAIN MARQUEE STYLE — INFINITE LOOP)
+         ═══════════════════════════════════════════════════ -->
+    <section id="gallery" class="gallery-section">
+        <div class="section-container">
+            <div class="section-header text-center reveal-up">
+                <span class="section-badge"><i class="fas fa-train text-emerald"></i> ACTION GALLERY</span>
+                <h2 class="section-title">Moments From <span class="text-emerald">The Field</span></h2>
+                <p class="section-subtitle-text">Live action snapshots from matchday at ApexElite</p>
+            </div>
+        </div>
+
+        <!-- Train Marquee Continuous Infinite Track -->
+        <div class="gallery-train-wrapper">
+            <div class="gallery-train-track">
+                
+                <!-- Set 1 -->
+                <div class="gallery-train-item">
+                    <img src="assets/football_action.png" alt="Football Night Match">
+                    <div class="gallery-item-caption"><span>Night 5v5 Match</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Badminton Action">
+                    <div class="gallery-item-caption"><span>BWF Court Battle</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cricket Nets Practice">
+                    <div class="gallery-item-caption"><span>Pro Cricket Nets</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="assets/basketball_action.png" alt="Basketball Tournament">
+                    <div class="gallery-item-caption"><span>3v3 Hoops League</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Volleyball Spike">
+                    <div class="gallery-item-caption"><span>Sunset Volleyball</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tournament Trophy">
+                    <div class="gallery-item-caption"><span>Championship Finals</span></div>
+                </div>
+
+                <!-- Set 2 (Duplicate for Seamless Infinite Loop) -->
+                <div class="gallery-train-item">
+                    <img src="assets/football_action.png" alt="Football Night Match">
+                    <div class="gallery-item-caption"><span>Night 5v5 Match</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Badminton Action">
+                    <div class="gallery-item-caption"><span>BWF Court Battle</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Cricket Nets Practice">
+                    <div class="gallery-item-caption"><span>Pro Cricket Nets</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="assets/basketball_action.png" alt="Basketball Tournament">
+                    <div class="gallery-item-caption"><span>3v3 Hoops League</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Volleyball Spike">
+                    <div class="gallery-item-caption"><span>Sunset Volleyball</span></div>
+                </div>
+                <div class="gallery-train-item">
+                    <img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tournament Trophy">
+                    <div class="gallery-item-caption"><span>Championship Finals</span></div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         MEMBER REGISTRATION SECTION
+         ═══════════════════════════════════════════════════ -->
+    <!-- ═══════════════════════════════════════════════════
+         APEX VIP SUBSCRIPTION SECTION (DARK LUXURY SUBSCRIPTION THEME)
+         ═══════════════════════════════════════════════════ -->
+    <section id="subscribe" class="subscribe-section">
+        <div class="section-container">
+            <div class="registration-card dark-vip-card">
+                <div class="registration-grid">
+                    
+                    <!-- Left: VIP Subscription Benefits -->
+                    <div class="registration-info">
+                        <span class="sub-badge"><i class="fas fa-crown text-emerald"></i> VIP SUBSCRIPTION</span>
+                        <h2 class="reg-title text-white">Subscribe to <br><span class="text-emerald">Apex VIP Pass</span></h2>
+                        <p class="reg-desc text-muted-light">Subscribe your athlete profile to unlock priority slot booking, 15% discount on night matches, and weekly VIP deal drops.</p>
+                        
+                        <div class="reg-benefits-list">
+                            <div class="reg-benefit-item dark-benefit">
+                                <div class="reg-benefit-icon"><i class="fas fa-check"></i></div>
+                                <div>
+                                    <strong>Priority Slot Lock</strong>
+                                    <p>Book prime slots 7 days in advance before non-subscribers.</p>
+                                </div>
+                            </div>
+                            <div class="reg-benefit-item dark-benefit">
+                                <div class="reg-benefit-icon"><div class="reg-benefit-icon"><i class="fas fa-tags"></i></div></div>
+                                <div>
+                                    <strong>15% Off Night Slots</strong>
+                                    <p>Exclusive subscriber discounts on floodlight matches after 8 PM.</p>
+                                </div>
+                            </div>
+                            <div class="reg-benefit-item dark-benefit">
+                                <div class="reg-benefit-icon"><i class="fas fa-bell"></i></div>
+                                <div>
+                                    <strong>VIP Weekly Deal Drops</strong>
+                                    <p>Get exclusive flash sales, weather alerts, and league drops to your inbox.</p>
+                                </div>
+                            </div>
+                            <div class="reg-benefit-item dark-benefit">
+                                <div class="reg-benefit-icon"><i class="fas fa-trophy"></i></div>
+                                <div>
+                                    <strong>Tournament Fast-Track</strong>
+                                    <p>Priority access into seasonal weekend leagues & cups.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: VIP Subscription Form -->
+                    <div class="registration-form-wrap">
+                        <div class="reg-form-card dark-form-panel">
+                            <h3 class="reg-form-heading text-white">Subscribe to VIP Pass</h3>
+                            <p class="reg-form-sub text-muted-light">Instant VIP access in less than 60 seconds!</p>
+                            
+                            <form id="inline-subscribe-form">
+                                <div class="form-group">
+                                    <label for="sub-fullname" class="text-light-label">Full Name *</label>
+                                    <input type="text" id="sub-fullname" class="card-input dark-vip-input" placeholder="e.g. Alex Morgan" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sub-email-input" class="text-light-label">Email Address *</label>
+                                    <input type="email" id="sub-email-input" class="card-input dark-vip-input" placeholder="alex@sports.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sub-phone" class="text-light-label">Phone Number *</label>
+                                    <input type="tel" id="sub-phone" class="card-input dark-vip-input" placeholder="+91 98765 43210" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="sub-sport" class="text-light-label">Primary Sport *</label>
+                                    <select id="sub-sport" class="card-input dark-vip-input" required>
+                                        <option value="" disabled selected hidden>Select Primary Sport...</option>
+                                        <option value="Badminton">🏸 Badminton</option>
+                                        <option value="Football">⚽ Football</option>
+                                        <option value="Cricket">🏏 Cricket</option>
+                                        <option value="Tennis">🎾 Tennis</option>
+                                        <option value="Basketball">🏀 Basketball</option>
+                                        <option value="Other">🏆 Other</option>
+                                    </select>
+                                </div>
+
+                                <button type="submit" class="btn btn-emerald btn-block btn-vip-submit" style="margin-top: 18px; padding: 14px; font-size: 0.95rem;">
+                                    Subscribe to VIP Pass <i class="fas fa-paper-plane"></i>
+                                </button>
+                                <p id="sub-msg" class="text-center" style="margin-top: 10px; font-size: 0.85rem; min-height: 20px;"></p>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         TESTIMONIALS SECTION
+         ═══════════════════════════════════════════════════ -->
+    <section id="testimonials" class="testimonials-section">
+        <div class="section-container">
+            <div class="section-header text-center reveal-up">
+                <span class="section-badge">REVIEWS</span>
+                <h2 class="section-title">What Our <span class="text-emerald">Players Say</span></h2>
+            </div>
+
+            <!-- Dynamic Container for Reviews loaded via JS/Supabase -->
+            <div id="reviews-container" class="testimonials-grid reveal-up">
+                <!-- Fallback 3 Elegant White Cards -->
+                <div class="testimonial-card white-card">
+                    <div class="t-rating">★★★★★</div>
+                    <p class="t-text">"The synthetic turf quality is absolutely world-class! The lighting for late-night 5v5 matches is crisp and glare-free. Booking slots takes less than 30 seconds."</p>
+                    <div class="t-author">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Rahul Sharma" class="t-avatar">
+                        <div>
+                            <h4 class="t-name">Rahul Sharma</h4>
+                            <span class="t-role">Team Captain</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card white-card">
+                    <div class="t-rating">★★★★★</div>
+                    <p class="t-text">"We hosted our corporate cricket cup at ApexElite. The net facilities, parking, and cafeteria service were top notch. Highly recommended!"</p>
+                    <div class="t-author">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Ananya Roy" class="t-avatar">
+                        <div>
+                            <h4 class="t-name">Ananya Roy</h4>
+                            <span class="t-role">Tournament Host</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card white-card">
+                    <div class="t-rating">★★★★★</div>
+                    <p class="t-text">"Best badminton courts in town! Smooth wooden floor, high ceiling, and clean changing rooms with warm showers."</p>
+                    <div class="t-author">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Vikram Seth" class="t-avatar">
+                        <div>
+                            <h4 class="t-name">Vikram Seth</h4>
+                            <span class="t-role">Regular Player</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Action CTA -->
+            <div class="text-center mt-2 reveal-up">
+                <button id="open-review-modal" class="btn btn-outline-emerald btn-large">
+                    <i class="fas fa-pen text-emerald"></i> Write a Review
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         BOTTOM CTA SECTION
+         ═══════════════════════════════════════════════════ -->
+    <section class="bottom-cta-section">
+        <div class="cta-backdrop-overlay"></div>
+        <div class="cta-content-inner text-center reveal-up">
+            <h2 class="cta-heading">Ready to <span class="text-emerald">Play?</span></h2>
+            <p class="cta-subtext">Book your slot now and experience the best turf in town.</p>
+            <button class="btn btn-emerald btn-large open-slots">
+                Book Now <i class="fas fa-bolt"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════
+         FOOTER SECTION
+         ═══════════════════════════════════════════════════ -->
+    <footer id="contact" class="footer-section">
+        <div class="section-container">
+            <div class="footer-grid">
+                
+                <!-- Column 1: Logo & Social -->
+                <div class="footer-col">
+                    <a href="#home" class="logo">
+                        <span class="logo-icon"><i class="fas fa-futbol"></i></span>
+                        <span class="logo-text">APEX<span class="text-emerald">ELITE</span></span>
+                    </a>
+                    <p class="footer-tagline">
+                        Premier multi-sport arena, FIFA-grade turf pitches, and modern indoor courts for athletes of all levels.
+                    </p>
+                    <div class="footer-socials">
+                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Column 2: Quick Links -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Quick Links</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="#home"><i class="fas fa-chevron-right text-emerald"></i> Home</a></li>
+                        <li><a href="#about"><i class="fas fa-chevron-right text-emerald"></i> About Us</a></li>
+                        <li><a href="#facilities"><i class="fas fa-chevron-right text-emerald"></i> Facilities</a></li>
+                        <li><a href="#book-slot"><i class="fas fa-chevron-right text-emerald"></i> Book Slot</a></li>
+                        <li><a href="#gallery"><i class="fas fa-chevron-right text-emerald"></i> Gallery</a></li>
+                        <li><a href="#testimonials"><i class="fas fa-chevron-right text-emerald"></i> Testimonials</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Facilities -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Facilities</h4>
+                    <ul class="footer-links-list">
+                        <li><a href="#facilities"><i class="fas fa-futbol text-emerald"></i> Football Turf</a></li>
+                        <li><a href="#facilities"><i class="fas fa-baseball-ball text-emerald"></i> Cricket Nets</a></li>
+                        <li><a href="#facilities"><i class="fas fa-feather-alt text-emerald"></i> Badminton Court</a></li>
+                        <li><a href="#facilities"><i class="fas fa-coffee text-emerald"></i> Cafeteria</a></li>
+                        <li><a href="#facilities"><i class="fas fa-parking text-emerald"></i> Parking Space</a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Contact Information & Google Map -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title">Contact Us</h4>
+                    <div class="contact-info-list">
+                        <p><i class="fas fa-map-marker-alt text-emerald"></i> 123 Arena Drive, Sports Hub, Chennai, India</p>
+                        <p><i class="fas fa-phone-alt text-emerald"></i> +91 98765 43210</p>
+                        <p><i class="fas fa-envelope text-emerald"></i> booking@apexelitesports.com</p>
+                    </div>
+                    
+                    <!-- Google Map Embed Preview -->
+                    <div class="map-container">
+                        <iframe title="ApexElite Location Map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.8587129532585!2d80.2089!3d13.0441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTPCsDAyJzM4LjgiTiA4MMKwMTInMzIuMCJF!5e0!3m2!1sen!2sin!4v1650000000000!5m2!1sen!2sin" width="100%" height="110" style="border:0;border-radius:12px;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Bottom Bar -->
+            <div class="footer-bottom-bar">
+                <p>&copy; 2026 ApexElite Sports Arena. All Rights Reserved.</p>
+                <div class="legal-links">
+                    <a href="#">Privacy Policy</a>
+                    <span>•</span>
+                    <a href="#">Terms & Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════════════
+         MODALS (INTACT WITH ALL SCRIPT IDs & HOOKS)
+         ═══════════════════════════════════════════════════ -->
+
+    <!-- Slot Booking Modal -->
+    <div id="slot-modal" class="slot-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="slot-modal-title">
+        <div class="slot-modal-panel light-modal">
+            <!-- Modal Header -->
+            <div class="slot-modal-header">
+                <div class="slot-modal-hero" id="slot-modal-hero"></div>
+                <div class="slot-modal-header-content">
+                    <button id="close-slot-modal" class="slot-close-btn" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="slot-sport-badge">
+                        <i id="slot-sport-icon" class="fas fa-futbol"></i>
+                    </div>
+                    <h2 id="slot-modal-title" class="slot-sport-title">Football</h2>
+                    <p class="slot-sport-sub">Select your preferred date &amp; time slot</p>
+                </div>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="slot-modal-body">
+                <!-- Location Picker -->
+                <div class="slot-section">
+                    <div class="slot-section-label"><i class="fas fa-map-marker-alt text-emerald"></i> Choose Location</div>
+                    <div class="slot-location-toggle" id="slot-location-toggle">
+                        <button class="slot-loc-btn active" data-location="Chennai">
+                            <i class="fas fa-map-pin"></i> Chennai
+                        </button>
+                        <button class="slot-loc-btn coming-soon" disabled title="Coming Soon">
+                            <i class="fas fa-hourglass-half"></i> Coming Soon
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Date Picker Row -->
+                <div class="slot-section">
+                    <div class="slot-section-label"><i class="fas fa-calendar-alt text-emerald"></i> Choose Date</div>
+                    <button id="slot-date-trigger" class="slot-date-trigger">
+                        <i class="fas fa-calendar-day"></i>
+                        <span id="slot-date-trigger-label">Select a date</span>
+                        <i class="fas fa-chevron-down slot-date-chevron" id="slot-date-chevron"></i>
+                    </button>
+                    <div id="slot-calendar-popup" class="slot-calendar-popup" style="display:none;">
+                        <div class="cal-header">
+                            <button id="cal-prev" class="cal-nav-btn" aria-label="Previous month"><i class="fas fa-chevron-left"></i></button>
+                            <span id="cal-month-label" class="cal-month-label"></span>
+                            <button id="cal-next" class="cal-nav-btn" aria-label="Next month"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="cal-day-names">
+                            <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                        </div>
+                        <div id="cal-grid" class="cal-grid"></div>
+                    </div>
+                </div>
+
+                <!-- Duration Toggle -->
+                <div class="slot-section">
+                    <div class="slot-section-label"><i class="fas fa-clock text-emerald"></i> Session Duration</div>
+                    <div class="slot-duration-toggle" id="slot-duration-toggle">
+                        <button class="slot-dur-btn active" data-duration="30">30 Min</button>
+                        <button class="slot-dur-btn" data-duration="60">1 Hour</button>
+                        <button class="slot-dur-btn" data-duration="120">2 Hours</button>
+                    </div>
+                </div>
+
+                <!-- Time Slots Grid -->
+                <div class="slot-section">
+                    <div class="slot-section-label"><i class="fas fa-sun text-emerald"></i> Available Time Slots</div>
+                    <div class="slot-legend">
+                        <span class="slot-legend-item"><span class="slot-dot available"></span> Available</span>
+                        <span class="slot-legend-item"><span class="slot-dot selected"></span> Selected</span>
+                    </div>
+                    <div class="slot-grid" id="slot-grid"></div>
+                </div>
+
+                <!-- Booking Summary -->
+                <div class="slot-summary" id="slot-summary" style="display:none;">
+                    <div class="slot-summary-inner">
+                        <div class="slot-summary-row">
+                            <span><i class="fas fa-map-marker-alt"></i> Location</span>
+                            <span id="summary-location" class="slot-summary-accent">Chennai</span>
+                        </div>
+                        <div class="slot-summary-row">
+                            <span><i class="fas fa-futbol" id="summary-sport-icon"></i> <span id="summary-sport">Football</span></span>
+                            <span id="summary-date" class="slot-summary-accent"></span>
+                        </div>
+                        <div class="slot-summary-row">
+                            <span><i class="fas fa-clock"></i> Time</span>
+                            <span id="summary-time" class="slot-summary-accent"></span>
+                        </div>
+                        <div class="slot-summary-row">
+                            <span><i class="fas fa-hourglass-half"></i> Duration</span>
+                            <span id="summary-duration" class="slot-summary-accent"></span>
+                        </div>
+                    </div>
+                    <button id="confirm-slot-btn" class="btn btn-emerald btn-block slot-confirm-btn">
+                        Confirm Booking <i class="fas fa-check"></i>
+                    </button>
+                    <p id="slot-book-msg" class="slot-book-msg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slot Confirm Popup -->
+    <div id="slot-confirm-popup" class="slot-confirm-popup" style="display:none;" role="dialog" aria-modal="true">
+        <div class="scp-card light-modal">
+            <button id="scp-close" class="scp-close-btn" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="scp-header">
+                <div class="scp-icon-wrap">
+                    <i id="scp-sport-icon" class="fas fa-futbol text-emerald"></i>
+                </div>
+                <div>
+                    <p class="scp-eyebrow">Confirm Your Booking</p>
+                    <h3 id="scp-sport-name" class="scp-title">Badminton</h3>
+                </div>
+            </div>
+            <div class="scp-details">
+                <div class="scp-row">
+                    <span class="scp-label"><i class="fas fa-map-marker-alt"></i> Location</span>
+                    <span id="scp-location" class="scp-value">Chennai</span>
+                </div>
+                <div class="scp-row">
+                    <span class="scp-label"><i class="fas fa-calendar-day"></i> Date</span>
+                    <span id="scp-date" class="scp-value"></span>
+                </div>
+                <div class="scp-row">
+                    <span class="scp-label"><i class="fas fa-clock"></i> Time</span>
+                    <span id="scp-time" class="scp-value"></span>
+                </div>
+                <div class="scp-row">
+                    <span class="scp-label"><i class="fas fa-hourglass-half"></i> Duration</span>
+                    <span id="scp-duration" class="scp-value"></span>
+                </div>
+            </div>
+            <button id="scp-confirm-btn" class="btn btn-emerald btn-block scp-confirm-btn">
+                Confirm Booking <i class="fas fa-check"></i>
+            </button>
+            <p id="scp-msg" class="slot-book-msg"></p>
+        </div>
+    </div>
+
+    <!-- Write a Review Modal -->
+    <div id="review-modal" class="slot-modal-overlay" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+        <div class="slot-modal-panel light-modal" style="max-width: 550px;">
+            <div class="slot-modal-header" style="padding: 24px; position: relative;">
+                <button id="close-review-modal" class="slot-close-btn" aria-label="Close" style="position: absolute; top: 20px; right: 20px; background: none; border: none; color: #64748B; cursor: pointer; font-size: 1.2rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+                <h2 id="review-modal-title" class="slot-sport-title" style="margin-top: 0; font-size: 1.8rem; color: #0F172A;">Write a <span class="text-emerald">Review</span></h2>
+                <p class="slot-sport-sub" style="color: #64748B; font-size: 0.9rem; margin-top: 5px;">Share your play experience with our community</p>
+            </div>
+            <div class="slot-modal-body" style="padding: 0 24px 24px;">
+                <form id="review-form">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="review-name" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Your Name *</label>
+                        <input type="text" id="review-name" placeholder="Enter your full name" required style="width: 100%; padding: 12px 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #0F172A; font-size: 0.95rem;">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 16px;">
+                        <div class="form-group">
+                            <label for="review-sport" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Sport Played *</label>
+                            <select id="review-sport" required style="width: 100%; padding: 12px 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #0F172A; font-size: 0.95rem;">
+                                <option value="" disabled selected>Select sport</option>
+                                <option value="Football">⚽ Football</option>
+                                <option value="Cricket">🏏 Cricket</option>
+                                <option value="Basketball">🏀 Basketball</option>
+                                <option value="Volleyball">🏐 Volleyball</option>
+                                <option value="Badminton">🏸 Badminton</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Rating *</label>
+                            <div class="star-rating-input" id="star-rating-input" style="display: flex; gap: 8px; font-size: 1.5rem; color: #CBD5E1; height: 42px; align-items: center;">
+                                <i class="fas fa-star" data-rating="1" style="cursor: pointer;"></i>
+                                <i class="fas fa-star" data-rating="2" style="cursor: pointer;"></i>
+                                <i class="fas fa-star" data-rating="3" style="cursor: pointer;"></i>
+                                <i class="fas fa-star" data-rating="4" style="cursor: pointer;"></i>
+                                <i class="fas fa-star" data-rating="5" style="cursor: pointer;"></i>
+                            </div>
+                            <input type="hidden" id="review-rating-value" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="review-text" style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Your Review *</label>
+                        <textarea id="review-text" rows="4" placeholder="How was your turf quality, lighting, and booking experience?" required style="width: 100%; padding: 12px 16px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; color: #0F172A; font-size: 0.95rem;"></textarea>
+                    </div>
+                    <button type="submit" id="review-submit-btn" class="btn btn-emerald btn-block" style="padding: 14px;">
+                        Submit Review <i class="fas fa-paper-plane"></i>
+                    </button>
+                    <p id="review-msg" style="margin-top: 12px; font-weight: 600; min-height: 20px; text-align:center; font-size: 0.9rem;"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="supabase-client.js?v=2"></script>
+    <script src="script.js?v=9.0"></script>
+</body>
+</html>

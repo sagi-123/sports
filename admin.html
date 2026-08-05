@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexElite | Admin Portal</title>
+    <meta name="description" content="Manage ApexElite registrations, bookings, and subscribers.">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,600;0,800;0,900;1,800&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css?v=8.0">
+
+    <style>
+        /* Custom dashboard layout overrides and enhancements */
+        :root {
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --glass-border: #E2E8F0;
+            --accent-color: #16A34A;
+            --primary-bg: #FFFFFF;
+            --secondary-bg: #F8FAFC;
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #0F172A;
+            font-family: var(--font-body);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── Login Gate Styles (SA Elevate Glassmorphism Style) ── */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #0a0f1e;
+        }
+
+        /* Sports arena background image — fills full screen behind card */
+        .login-bg-image {
+            position: absolute !important;
+            inset: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+            z-index: 1 !important;
+            transform: scale(1.05);
+            filter: brightness(0.32) saturate(1.3) contrast(1.05);
+            display: block !important;
+            min-width: 100%;
+            min-height: 100%;
+        }
+
+        /* Dark gradient + green glow overlay on top of image */
+        .login-backdrop-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background:
+                radial-gradient(ellipse at 15% 80%, rgba(22, 163, 74, 0.35) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 15%, rgba(22, 163, 74, 0.2) 0%, transparent 50%),
+                linear-gradient(160deg, rgba(10, 15, 30, 0.5) 0%, rgba(10, 15, 30, 0.85) 100%);
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 48px 38px;
+            text-align: center;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+        }
+
+        .login-logo {
+            font-family: var(--font-heading);
+            font-size: 2.3rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #FFFFFF;
+            margin-bottom: 6px;
+        }
+
+        .login-logo-accent {
+            color: #16A34A;
+        }
+
+        .login-subtitle {
+            color: #94A3B8;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #E2E8F0;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: #FFFFFF;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #64748B;
+        }
+
+        .form-group input:focus {
+            border-color: #16A34A;
+            background: rgba(22, 163, 74, 0.12);
+            box-shadow: 0 0 25px rgba(22, 163, 74, 0.35);
+        }
+
+        .btn-admin-submit {
+            width: 100%;
+            height: 52px;
+            border-radius: 14px;
+            background-color: #16A34A;
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(22, 163, 74, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn-admin-submit:hover {
+            background-color: #15803D;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(22, 163, 74, 0.5);
+        }
+
+        .login-error-msg {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-top: 12px;
+            min-height: 20px;
+        }
+
+        /* ── Main Dashboard Layout ────────────────────────────────────────── */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--secondary-bg);
+            border-right: 1px solid var(--glass-border);
+            padding: 35px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 45px;
+            padding-left: 10px;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .menu-item:hover {
+            color: var(--text-main);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .menu-item.active {
+            color: #FFFFFF !important;
+            background-color: #16A34A !important;
+            box-shadow: 0 5px 15px rgba(22, 163, 74, 0.25);
+        }
+
+        .menu-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            border-top: 1px solid var(--glass-border);
+            padding-top: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 45px 50px;
+            overflow-y: auto;
+            max-width: calc(100vw - 280px);
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 20px;
+        }
+
+        .main-title h1 {
+            font-size: 2.2rem;
+            letter-spacing: 1.5px;
+        }
+
+        .main-title p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.03);
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ── Dashboard Views ──────────────────────────────────────────────── */
+        .dashboard-view {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .dashboard-view.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Grid/Stats Section ───────────────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 18px;
+            padding: 26px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #16A34A;
+            box-shadow: 0 15px 35px rgba(22, 163, 74, 0.15);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            width: 0;
+            background-color: #16A34A;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover::after {
+            width: 100%;
+        }
+
+        .stat-info h3 {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: #64748B;
+            margin-bottom: 8px;
+        }
+
+        .stat-info .value {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: #0F172A !important; /* Visible dark numbers! */
+            line-height: 1.1;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: #16A34A;
+            opacity: 0.9;
+        }
+
+        /* ── Content Sections ────────────────────────────────────────────── */
+        .card-panel {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .panel-title {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .panel-title i {
+            color: var(--accent-color);
+        }
+
+        /* Filters & Search */
+        .table-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 300px;
+            flex-grow: 1;
+            max-width: 450px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            color: #0F172A;
+            font-weight: 600;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: #16A34A;
+            background: #DCFCE7;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .select-filter {
+            padding: 12px 18px;
+            background: #F8FAFC;
+            border: 1.5px solid #E2E8F0;
+            border-radius: 10px;
+            color: #0F172A;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            outline: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .select-filter:focus {
+            border-color: #16A34A;
+        }
+
+        /* ── Data Tables ─────────────────────────────────────────────────── */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background-color: #F8FAFC;
+            color: #16A34A;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.82rem;
+            letter-spacing: 1px;
+            padding: 16px 20px;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        .admin-table td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #E2E8F0;
+            font-size: 0.92rem;
+            color: #0F172A;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .admin-table tbody tr {
+            transition: var(--transition);
+        }
+
+        .admin-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.01);
+        }
+
+        .admin-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status & Badges */
+        .sport-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(204, 255, 0, 0.2);
+        }
+
+        .duration-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
+        }
+
+        .action-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .action-btn.btn-delete {
+            color: #ff4d4d;
+        }
+
+        .action-btn.btn-delete:hover {
+            background-color: rgba(255, 77, 77, 0.1);
+            transform: scale(1.1);
+        }
+
+        .action-btn.btn-view {
+            color: var(--accent-color);
+        }
+
+        .action-btn.btn-view:hover {
+            background-color: rgba(204, 255, 0, 0.1);
+            transform: scale(1.1);
+        }
+
+        .table-empty {
+            text-align: center;
+            padding: 40px !important;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* ── Popular Sports Cards ────────────────────────────────────────── */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .activity-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .activity-avatar {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: var(--primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+        }
+
+        .activity-text p {
+            font-weight: 800;
+            color: #FFFFFF !important;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+
+        .activity-text span {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .sports-ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .sport-ranking-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sport-rank-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .sport-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .sport-bar-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+            width: 0%;
+            transition: width 1s cubic-bezier(0.1, 0.8, 0.3, 1);
+        }
+
+        /* ── Responsive Overrides ────────────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 20px;
+            }
+            .sidebar-brand {
+                margin-bottom: 20px;
+            }
+            .main-content {
+                max-width: 100%;
+                padding: 25px 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+        /* ── Gallery Management Styles ─────────────────────────────────────── */
+        .gallery-upload-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 900px) {
+            .gallery-upload-card { grid-template-columns: 1fr; }
+        }
+
+        .gallery-upload-form .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .gallery-upload-form label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .gallery-upload-form input,
+        .gallery-upload-form select,
+        .gallery-upload-form textarea {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            outline: none;
+            transition: var(--transition);
+            box-sizing: border-box;
+        }
+
+        .gallery-upload-form input:focus,
+        .gallery-upload-form select:focus,
+        .gallery-upload-form textarea:focus {
+            border-color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 10px rgba(204, 255, 0, 0.08);
+        }
+
+        .gallery-upload-form select option {
+            background: #1c1d21;
+        }
+
+        /* File drop zone */
+        .drop-zone {
+            position: relative;
+            border: 2px dashed var(--glass-border);
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(255,255,255,0.01);
+        }
+
+        .drop-zone:hover, .drop-zone.dragover {
+            border-color: var(--accent-color);
+            background: rgba(204, 255, 0, 0.03);
+        }
+
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            border: none;
+            background: transparent;
+        }
+
+        .drop-zone-icon {
+            font-size: 2.2rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .drop-zone-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .drop-zone-label strong {
+            color: var(--accent-color);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .image-preview-box {
+            margin-top: 14px;
+            border-radius: 8px;
+            overflow: hidden;
+            max-height: 200px;
+            display: none;
+        }
+
+        .image-preview-box img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Gallery grid in admin */
+        .admin-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .admin-gallery-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: var(--transition);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .admin-gallery-item:hover {
+            border-color: rgba(204, 255, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .admin-gallery-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .admin-gallery-item-info {
+            padding: 12px;
+        }
+
+        .admin-gallery-item-caption {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .admin-gallery-item-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-gallery-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(204, 255, 0, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(204, 255, 0, 0.2);
+        }
+
+        .admin-gallery-delete {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 77, 77, 0.85);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: var(--transition);
+            backdrop-filter: blur(4px);
+        }
+
+        .admin-gallery-item:hover .admin-gallery-delete {
+            opacity: 1;
+        }
+
+        .gallery-empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .gallery-empty-state i {
+            font-size: 3rem;
+            color: var(--accent-color);
+            opacity: 0.3;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .gallery-upload-msg {
+            margin-top: 12px;
+            font-size: 0.9rem;
+            min-height: 22px;
+            font-weight: 600;
+        }
+
+        .gallery-stats-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .gallery-stats-row strong {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        /* ── Festive Offer Toggle Switch ── */
+        .festive-toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 28px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .festive-toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .festive-toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: #CBD5E1;
+            border-radius: 28px;
+            transition: background 0.3s;
+        }
+        .festive-toggle-slider::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 4px;
+            top: 4px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .festive-toggle-switch input:checked + .festive-toggle-slider {
+            background: #16A34A;
+        }
+        .festive-toggle-switch input:checked + .festive-toggle-slider::before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Login Screen Gate (SA Elevate / Consultant Glassmorphism Style) ── -->
+    <div id="admin-login-overlay" class="login-overlay">
+        <!-- Sports Turf Arena Background Image -->
+        <img src="assets/hero_main_arena.png" alt="Sports Arena Turf" class="login-bg-image">
+        
+        <!-- Dark Blur Backdrop Overlay -->
+        <div class="login-backdrop-overlay"></div>
+
+        <!-- Glassmorphic Card -->
+        <div class="login-card">
+            <div class="login-logo"><span class="login-logo-accent">APEX</span>ELITE</div>
+            <div class="login-subtitle">ADMIN PORTAL LOGIN</div>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-passcode">Master Passcode</label>
+                    <input type="password" id="admin-passcode" placeholder="Enter admin passcode" required autofocus>
+                </div>
+                <button type="submit" class="btn-admin-submit">
+                    Access Dashboard <i class="fas fa-arrow-right"></i>
+                </button>
+                <div id="login-error" class="login-error-msg"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── Dashboard Container ────────────────────────────────────────────── -->
+    <div id="admin-dashboard" class="dashboard-container" style="display: none;">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div>
+                <div class="sidebar-brand">
+                    <span class="logo-accent">APEX</span>ELITE <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted);">ADMIN</span>
+                </div>
+                <nav class="sidebar-menu">
+                    <div class="menu-item active" data-view="overview">
+                        <i class="fas fa-chart-line"></i> Overview
+                    </div>
+                    <div class="menu-item" data-view="registrations">
+                        <i class="fas fa-id-card"></i> Trial Registrations
+                    </div>
+                    <div class="menu-item" data-view="bookings">
+                        <i class="fas fa-calendar-alt"></i> Slot Bookings
+                    </div>
+                    <div class="menu-item" data-view="subscribers">
+                        <i class="fas fa-envelope-open-text"></i> Subscribers
+                    </div>
+                    <div class="menu-item" data-view="gallery">
+                        <i class="fas fa-images"></i> Gallery
+                    </div>
+                    <div class="menu-item" data-view="reviews">
+                        <i class="fas fa-star"></i> Reviews
+                    </div>
+                    <div class="menu-item" data-view="festive-offer">
+                        <i class="fas fa-gift"></i> Festive Offer
+                    </div>
+                </nav>
+            </div>
+            
+            <div class="sidebar-footer">
+                <div class="menu-item" id="admin-logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Log Out
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard View -->
+        <main class="main-content">
+            
+            <!-- Dashboard Header -->
+            <header class="main-header">
+                <div class="main-title">
+                    <h1 id="view-title-header">Overview Dashboard</h1>
+                    <p id="view-subtitle-header">ApexElite sports academy statistics and records.</p>
+                </div>
+                <div class="header-actions">
+                    <button id="admin-refresh-btn" class="btn btn-outline" style="padding: 10px 18px; font-size: 0.85rem;">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                    <div class="user-profile">
+                        <i class="fas fa-user-shield"></i> <span id="admin-profile-name">Administrator</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ── VIEW 1: OVERVIEW ────────────────────────────────────────── -->
+            <section id="view-overview" class="dashboard-view active">
+                
+                <!-- Stats Row -->
+                <div class="stats-grid">
+                    <!-- Registrations Card -->
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Total Registrations</h3>
+                            <div class="value" id="stat-reg-count">0</div>
+                        </div>
+                        <i class="fas fa-id-card stat-icon"></i>
+                    </div>
+
+                    <!-- Bookings Card -->
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Total Bookings</h3>
+                            <div class="value" id="stat-book-count">0</div>
+                        </div>
+                        <i class="fas fa-calendar-check stat-icon"></i>
+                    </div>
+
+                    <!-- Subscribers Card -->
+                    <div class="stat-card glass">
+                        <div class="stat-info">
+                            <h3>Subscribers</h3>
+                            <div class="value" id="stat-sub-count">0</div>
+                        </div>
+                        <i class="fas fa-envelope-open-text stat-icon"></i>
+                    </div>
+                </div>
+
+                <!-- Chart & Activity Row -->
+                <div class="chart-row">
+                    <!-- Recent Activities -->
+                    <div class="card-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title"><i class="fas fa-clipboard-list"></i> Recent Submissions</h2>
+                        </div>
+                        <div class="activity-list" id="recent-activities-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Sports Bookings Breakdown -->
+                    <div class="card-panel">
+                        <div class="panel-header">
+                            <h2 class="panel-title"><i class="fas fa-basketball-ball"></i> Top Sports</h2>
+                        </div>
+                        <div class="sports-ranking-list" id="sports-ranking-list">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── VIEW 2: TRIAL REGISTRATIONS ──────────────────────────────── -->
+            <section id="view-registrations" class="dashboard-view">
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-id-card"></i> Free Trial Registrations</h2>
+                        <button class="btn btn-primary btn-csv-export" data-type="registrations" style="padding: 10px 18px; font-size: 0.85rem;">
+                            Export CSV <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="reg-search" placeholder="Search by name, email or phone...">
+                        </div>
+                        <div class="filter-controls">
+                            <select id="reg-filter-sport" class="select-filter">
+                                <option value="all">All Sports</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Football">Football</option>
+                                <option value="Cricket">Cricket</option>
+                                <option value="Volleyball">Volleyball</option>
+                                <option value="Athletics">Athletics</option>
+                                <option value="Fitness Training">Fitness Training</option>
+                                <option value="Shuttle Cork">Shuttle Cork</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Registered At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="registrations-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── VIEW 3: SLOT BOOKINGS ────────────────────────────────────── -->
+            <section id="view-bookings" class="dashboard-view">
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-calendar-alt"></i> Facility Slot Bookings</h2>
+                        <button class="btn btn-primary btn-csv-export" data-type="bookings" style="padding: 10px 18px; font-size: 0.85rem;">
+                            Export CSV <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="book-search" placeholder="Search by name or email...">
+                        </div>
+                        <div class="filter-controls">
+                            <select id="book-filter-sport" class="select-filter">
+                                <option value="all">All Sports</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Football">Football</option>
+                                <option value="Cricket">Cricket</option>
+                                <option value="Volleyball">Volleyball</option>
+                                <option value="Athletics">Athletics</option>
+                                <option value="Fitness Training">Fitness Training</option>
+                                <option value="Shuttle Cork">Shuttle Cork</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Email</th>
+                                    <th>Sport</th>
+                                    <th>Date</th>
+                                    <th>Time Slot</th>
+                                    <th>Duration</th>
+                                    <th>Booked At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookings-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <!-- Manage Active Timeslots Panel -->
+                <div class="card-panel" style="margin-top: 30px;">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-clock"></i> Manage Available Booking Timeslots</h2>
+                        <span style="font-size:0.85rem;color:var(--text-muted);">Define which timeslots appear on the homepage booking calendar</span>
+                    </div>
+
+                    <!-- Filter / Select duration for configuring -->
+                    <div style="margin-bottom: 25px; display:flex; gap:15px; align-items:center;">
+                        <span style="font-weight:600; font-size:0.9rem; color:#0F172A;">Configuring slots for:</span>
+                        <select id="admin-timeslot-duration-filter" style="padding:10px 14px; background:#F8FAFC; border:1px solid #CBD5E1; color:#0F172A; border-radius:8px; font-weight:700; font-size:0.9rem; cursor:pointer;">
+                            <option value="30">30 Minutes Slots</option>
+                            <option value="60" selected>1 Hour Slots</option>
+                            <option value="120">2 Hours Slots</option>
+                        </select>
+                    </div>
+
+                    <!-- Add Timeslot Form -->
+                    <form id="admin-add-timeslot-form" style="display:flex; gap: 15px; align-items: flex-end; margin-bottom: 25px;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label for="new-timeslot-value" style="margin-bottom: 8px; display:block; font-weight:600; color:#0F172A;">Select Time to Add *</label>
+                            <select id="new-timeslot-value" required style="width:100%; padding:10px 14px; background:#F8FAFC; border:1px solid #CBD5E1; color:#0F172A; border-radius:8px; font-weight:600; font-size:0.9rem; cursor:pointer;">
+                                <option value="" disabled selected>Select start time</option>
+                                <option value="05:00 AM">05:00 AM</option>
+                                <option value="05:30 AM">05:30 AM</option>
+                                <option value="06:00 AM">06:00 AM</option>
+                                <option value="06:30 AM">06:30 AM</option>
+                                <option value="07:00 AM">07:00 AM</option>
+                                <option value="07:30 AM">07:30 AM</option>
+                                <option value="08:00 AM">08:00 AM</option>
+                                <option value="08:30 AM">08:30 AM</option>
+                                <option value="09:00 AM">09:00 AM</option>
+                                <option value="09:30 AM">09:30 AM</option>
+                                <option value="10:00 AM">10:00 AM</option>
+                                <option value="10:30 AM">10:30 AM</option>
+                                <option value="11:00 AM">11:00 AM</option>
+                                <option value="11:30 AM">11:30 AM</option>
+                                <option value="12:00 PM">12:00 PM</option>
+                                <option value="12:30 PM">12:30 PM</option>
+                                <option value="01:00 PM">01:00 PM</option>
+                                <option value="01:30 PM">01:30 PM</option>
+                                <option value="02:00 PM">02:00 PM</option>
+                                <option value="02:30 PM">02:30 PM</option>
+                                <option value="03:00 PM">03:00 PM</option>
+                                <option value="03:30 PM">03:30 PM</option>
+                                <option value="04:00 PM">04:00 PM</option>
+                                <option value="04:30 PM">04:30 PM</option>
+                                <option value="05:00 PM">05:00 PM</option>
+                                <option value="05:30 PM">05:30 PM</option>
+                                <option value="06:00 PM">06:00 PM</option>
+                                <option value="06:30 PM">06:30 PM</option>
+                                <option value="07:00 PM">07:00 PM</option>
+                                <option value="07:30 PM">07:30 PM</option>
+                                <option value="08:00 PM">08:00 PM</option>
+                                <option value="08:30 PM">08:30 PM</option>
+                                <option value="09:00 PM">09:00 PM</option>
+                                <option value="09:30 PM">09:30 PM</option>
+                                <option value="10:00 PM">10:00 PM</option>
+                                <option value="10:30 PM">10:30 PM</option>
+                                <option value="11:00 PM">11:00 PM</option>
+                                <option value="11:30 PM">11:30 PM</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 25px; height: 42px;">
+                            <i class="fas fa-plus"></i> Add Slot
+                        </button>
+                    </form>
+
+                    <!-- Active Slots Grid/List -->
+                    <div style="display:flex; flex-wrap:wrap; gap:12px;" id="admin-active-slots-container">
+                        <!-- Populated dynamically by admin.js -->
+                    </div>
+                    <p id="admin-timeslot-msg" style="margin-top:15px; font-size:0.9rem; font-weight:500;"></p>
+                </div>
+            </section>
+
+            <!-- ── VIEW 4: NEWSLETTER SUBSCRIBERS ──────────────────────────── -->
+            <section id="view-subscribers" class="dashboard-view">
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-envelope-open-text"></i> Newsletter Subscribers</h2>
+                        <button class="btn btn-primary btn-csv-export" data-type="subscribers" style="padding: 10px 18px; font-size: 0.85rem;">
+                            Export CSV <i class="fas fa-download"></i>
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="table-controls">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="sub-search" placeholder="Search by email address...">
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Full Name</th>
+                                    <th>Email Address</th>
+                                    <th>Phone</th>
+                                    <th>Sport</th>
+                                    <th>Subscribed At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="subscribers-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── VIEW 5: GALLERY MANAGEMENT ──────────────────────────────── -->
+            <section id="view-gallery" class="dashboard-view">
+
+                <!-- Upload Panel -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-cloud-upload-alt"></i> Upload Gallery Image</h2>
+                        <span style="font-size:0.85rem;color:var(--text-muted);">Images appear instantly on the user-facing gallery</span>
+                    </div>
+
+                    <div class="gallery-upload-card">
+                        <!-- Left: Form -->
+                        <form id="gallery-upload-form" class="gallery-upload-form">
+                            <div class="form-group">
+                                <label for="gallery-caption">Image Caption / Title</label>
+                                <input type="text" id="gallery-caption" placeholder="e.g. Basketball Finals 2026" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="gallery-category">Category</label>
+                                <select id="gallery-category">
+                                    <option value="General">General</option>
+                                    <option value="Basketball">Basketball</option>
+                                    <option value="Football">Football</option>
+                                    <option value="Cricket">Cricket</option>
+                                    <option value="Volleyball">Volleyball</option>
+                                    <option value="Athletics">Athletics</option>
+                                    <option value="Fitness Training">Fitness Training</option>
+                                    <option value="Shuttle Cork">Shuttle Cork</option>
+                                    <option value="Events">Events</option>
+                                    <option value="Achievements">Achievements</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Image File</label>
+                                <div class="drop-zone" id="gallery-drop-zone">
+                                    <input type="file" id="gallery-image-file" accept="image/*">
+                                    <div class="drop-zone-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                    <div class="drop-zone-label">
+                                        <strong>Click or drag & drop image here</strong>
+                                        Supports JPG, PNG, WebP, GIF — max 5MB
+                                    </div>
+                                </div>
+                                <div class="image-preview-box" id="gallery-preview-box">
+                                    <img id="gallery-preview-img" src="" alt="Preview">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="gallery-image-url">Or paste Image URL</label>
+                                <input type="url" id="gallery-image-url" placeholder="https://example.com/image.jpg">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="width:100%;" id="gallery-upload-btn">
+                                <i class="fas fa-plus"></i> Add to Gallery
+                            </button>
+                            <p class="gallery-upload-msg" id="gallery-upload-msg"></p>
+                        </form>
+
+                        <!-- Right: Tips -->
+                        <div>
+                            <div class="card-panel" style="margin-bottom:0;background:rgba(204,255,0,0.02);border-color:rgba(204,255,0,0.15);">
+                                <h3 style="font-family:var(--font-heading);font-size:1rem;letter-spacing:1px;margin-bottom:15px;color:var(--accent-color);"><i class="fas fa-lightbulb"></i> How It Works</h3>
+                                <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px;font-size:0.875rem;color:var(--text-muted);">
+                                    <li><i class="fas fa-check" style="color:var(--accent-color);margin-right:8px;"></i> Upload a file <strong style="color:var(--text-main)">or</strong> paste a URL</li>
+                                    <li><i class="fas fa-check" style="color:var(--accent-color);margin-right:8px;"></i> Add a caption and choose a category</li>
+                                    <li><i class="fas fa-check" style="color:var(--accent-color);margin-right:8px;"></i> Click <strong style="color:var(--text-main)">Add to Gallery</strong></li>
+                                    <li><i class="fas fa-check" style="color:var(--accent-color);margin-right:8px;"></i> The image <strong style="color:var(--text-main)">instantly appears</strong> on the public gallery</li>
+                                    <li><i class="fas fa-trash-alt" style="color:#ff4d4d;margin-right:8px;"></i> Hover any image below to delete it</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Manage Existing Images -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-th"></i> Manage Gallery Images</h2>
+                        <div style="display:flex;align-items:center;gap:15px;">
+                            <span id="gallery-count-label" style="font-size:0.85rem;color:var(--text-muted);">Loading...</span>
+                            <select id="gallery-filter-cat" class="select-filter" style="padding:8px 14px;font-size:0.85rem;">
+                                <option value="all">All Categories</option>
+                                <option value="General">General</option>
+                                <option value="Basketball">Basketball</option>
+                                <option value="Football">Football</option>
+                                <option value="Cricket">Cricket</option>
+                                <option value="Volleyball">Volleyball</option>
+                                <option value="Athletics">Athletics</option>
+                                <option value="Fitness Training">Fitness Training</option>
+                                <option value="Shuttle Cork">Shuttle Cork</option>
+                                <option value="Events">Events</option>
+                                <option value="Achievements">Achievements</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="admin-gallery-grid" id="admin-gallery-grid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ── VIEW 6: REVIEWS ─────────────────────────────────────────── -->
+            <section id="view-reviews" class="dashboard-view">
+                
+                <!-- Manage Existing Reviews -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-star"></i> Manage Player Reviews</h2>
+                        <div style="display:flex;align-items:center;gap:15px;">
+                            <span id="reviews-count-label" style="font-size:0.85rem;color:var(--text-muted);">Loading...</span>
+                            <select id="review-filter-status" class="select-filter" style="padding:8px 14px;font-size:0.85rem;">
+                                <option value="all">All Reviews</option>
+                                <option value="pending">Pending Approval</option>
+                                <option value="approved">Approved</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Player Name</th>
+                                    <th>Sport</th>
+                                    <th>Rating</th>
+                                    <th>Review Text</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviews-table-body">
+                                <!-- Populated dynamically by admin.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ── VIEW 7: FESTIVE OFFER MANAGER ─────────────────────────────── -->
+            <section id="view-festive-offer" class="dashboard-view">
+
+                <!-- Live Preview Bar -->
+                <div class="card-panel" style="margin-bottom: 24px;">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-eye"></i> Live Preview</h2>
+                        <span id="festive-status-badge" style="padding:5px 14px;border-radius:20px;font-size:0.78rem;font-weight:700;">OFF</span>
+                    </div>
+                    <div id="festive-admin-preview" style="
+                        border-radius: 10px;
+                        overflow: hidden;
+                        height: 48px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 14px;
+                        background: linear-gradient(90deg, #0F172A 0%, #16A34A 50%, #0F172A 100%);
+                        color: #fff;
+                        font-size: 0.85rem;
+                        padding: 0 20px;
+                        opacity: 0.5;
+                        transition: opacity 0.3s;
+                    ">
+                        <span style="background:rgba(255,255,255,0.2);padding:3px 10px;border-radius:20px;font-size:0.7rem;font-weight:800;"><i class="fas fa-gift"></i> FESTIVE OFFER</span>
+                        <span id="preview-text">🎉 Special Deal: Get <strong>20% OFF</strong> on all Slot Bookings! Use Code: <span style="background:#fff;color:#0F172A;padding:2px 8px;border-radius:6px;font-weight:800;">FESTIVE20</span></span>
+                        <span id="preview-cta" style="background:#fff;color:#16A34A;padding:4px 14px;border-radius:20px;font-weight:800;font-size:0.75rem;">Claim Offer <i class="fas fa-bolt"></i></span>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="card-panel">
+                    <div class="panel-header">
+                        <h2 class="panel-title"><i class="fas fa-sliders-h"></i> Offer Banner Settings</h2>
+                    </div>
+
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+
+                        <!-- Toggle -->
+                        <div style="grid-column:1/-1;">
+                            <label style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:10px;">Banner Status</label>
+                            <div style="display:flex;align-items:center;gap:16px;">
+                                <label class="festive-toggle-switch">
+                                    <input type="checkbox" id="festive-toggle-input">
+                                    <span class="festive-toggle-slider"></span>
+                                </label>
+                                <span id="festive-toggle-label" style="font-weight:600;font-size:0.95rem;color:var(--text-muted);">Banner is OFF — Visitors won't see the offer</span>
+                            </div>
+                        </div>
+
+                        <!-- Offer Message -->
+                        <div style="grid-column:1/-1;">
+                            <label for="festive-msg-input" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Offer Message</label>
+                            <input type="text" id="festive-msg-input"
+                                placeholder="e.g. 🎉 Special Deal: Get 20% OFF on all Slot Bookings!"
+                                style="width:100%;padding:13px 16px;border:1px solid var(--glass-border);border-radius:8px;font-size:0.95rem;font-family:inherit;background:var(--secondary-bg);color:var(--text-main);outline:none;transition:border-color 0.2s;"
+                            >
+                        </div>
+
+                        <!-- Promo Code -->
+                        <div>
+                            <label for="festive-code-input" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">Promo Code</label>
+                            <input type="text" id="festive-code-input"
+                                placeholder="e.g. FESTIVE20"
+                                style="width:100%;padding:13px 16px;border:1px solid var(--glass-border);border-radius:8px;font-size:0.95rem;font-family:inherit;background:var(--secondary-bg);color:var(--text-main);outline:none;transition:border-color 0.2s;text-transform:uppercase;"
+                            >
+                        </div>
+
+                        <!-- CTA Button Text -->
+                        <div>
+                            <label for="festive-cta-input" style="font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);display:block;margin-bottom:8px;">CTA Button Text</label>
+                            <input type="text" id="festive-cta-input"
+                                placeholder="e.g. Claim Offer"
+                                style="width:100%;padding:13px 16px;border:1px solid var(--glass-border);border-radius:8px;font-size:0.95rem;font-family:inherit;background:var(--secondary-bg);color:var(--text-main);outline:none;transition:border-color 0.2s;"
+                            >
+                        </div>
+
+                        <!-- Save Button -->
+                        <div style="grid-column:1/-1;display:flex;gap:12px;">
+                            <button id="festive-save-btn" class="btn" style="background:#16A34A;color:#fff;padding:13px 32px;border-radius:10px;font-weight:700;font-size:0.95rem;border:none;cursor:pointer;transition:transform 0.2s,background 0.2s;">
+                                <i class="fas fa-save"></i> Save & Publish
+                            </button>
+                            <button id="festive-reset-btn" class="btn btn-outline" style="padding:13px 24px;border-radius:10px;font-size:0.95rem;">
+                                <i class="fas fa-undo"></i> Reset to Default
+                            </button>
+                        </div>
+
+                        <!-- Save Status -->
+                        <div style="grid-column:1/-1;">
+                            <p id="festive-save-msg" style="font-size:0.9rem;font-weight:600;min-height:22px;"></p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Supabase SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="admin.js?v=12"></script>
+</body>
+</html>
