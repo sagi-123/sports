@@ -488,17 +488,35 @@ if (inlineSubscribeForm) {
         let isDuplicate = false;
         let success = false;
 
-        // 1. Save subscriber details to Supabase (subscribers or newsletter table)
+        // 1. Save subscriber details to Supabase (subscribers, newsletter, & registrations)
         try {
-            const { error } = await db.from('subscribers').insert([payload]);
-            if (!error) {
-                success = true;
-            } else {
-                await db.from('newsletter').insert([payload]);
+            const { error: subErr } = await db.from('subscribers').insert([payload]);
+            if (!subErr) {
                 success = true;
             }
         } catch (err) {
-            console.warn('Supabase subscribe error:', err);
+            console.warn('Subscribers table insert skipped:', err);
+        }
+
+        try {
+            await db.from('newsletter').insert([{ email: email, created_at: payload.created_at }]);
+            success = true;
+        } catch (err) {
+            console.warn('Newsletter table insert skipped:', err);
+        }
+
+        try {
+            await db.from('registrations').insert([{
+                full_name: name || 'VIP Subscriber',
+                email: email,
+                phone: phone || 'N/A',
+                sport: sport || 'Sports',
+                message: 'VIP Pass Subscriber',
+                created_at: payload.created_at
+            }]);
+            success = true;
+        } catch (err) {
+            console.warn('Registrations VIP insert skipped:', err);
         }
 
         // 2. Save subscriber details to LocalStorage for Admin Panel Tracking (Subscribers tab)

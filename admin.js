@@ -223,57 +223,66 @@ async function fetchRegistrations() {
     allRegistrations.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 }
 
-// 2. Fetch Subscribers (Merge Supabase DB + Local Storage)
+// 2. Fetch Subscribers (Merge Supabase DB + Registrations + Local Storage)
 async function fetchSubscribers() {
-    let dbSubs = [];
+    let dbSubscribers = [];
+    let dbNewsletter = [];
+    let dbRegistrations = [];
+
     try {
-        const { data, error } = await db.from('subscribers').select('*').order('created_at', { ascending: false });
-        if (!error && data && data.length > 0) {
-            dbSubs = data;
-        } else {
-            const { data: newsData } = await db.from('newsletter').select('*').order('created_at', { ascending: false });
-            if (newsData) dbSubs = newsData;
-        }
-    } catch (err) {
-        console.warn('Error fetching subscribers from DB:', err.message);
-    }
+        const { data } = await db.from('subscribers').select('*').order('created_at', { ascending: false });
+        if (data) dbSubscribers = data;
+    } catch (err) {}
+
+    try {
+        const { data } = await db.from('newsletter').select('*').order('created_at', { ascending: false });
+        if (data) dbNewsletter = data;
+    } catch (err) {}
+
+    try {
+        const { data } = await db.from('registrations').select('*').order('created_at', { ascending: false });
+        if (data) dbRegistrations = data;
+    } catch (err) {}
 
     const localSubs = JSON.parse(localStorage.getItem('apex_elite_subscribers_mock') || '[]');
-    
-    // Map local subscriber details by email for fast lookup
-    const localByEmail = new Map();
-    localSubs.forEach(s => {
-        if (s.email) localByEmail.set(s.email.toLowerCase().trim(), s);
-    });
 
     const combinedMap = new Map();
 
-    // 1. Process DB subscribers & merge with local storage details if available
-    dbSubs.forEach(s => {
-        const em = (s.email || '').toLowerCase().trim();
+    const mergeSub = (item) => {
+        const em = (item.email || '').toLowerCase().trim();
         if (!em) return;
-        const localObj = localByEmail.get(em) || {};
-        combinedMap.set(em, {
-            ...localObj,
-            ...s,
-            full_name: s.full_name || s.name || localObj.full_name || localObj.name || 'VIP Subscriber',
-            phone: s.phone || s.phone_number || localObj.phone || localObj.phone_number || 'N/A',
-            sport: s.sport || s.primary_sport || localObj.sport || localObj.primary_sport || 'Sports'
-        });
-    });
+        const existing = combinedMap.get(em) || {};
+        
+        const fn = item.full_name || item.name || existing.full_name || existing.name || 'VIP Subscriber';
+        const ph = (item.phone && item.phone !== 'N/A') ? item.phone : ((existing.phone && existing.phone !== 'N/A') ? existing.phone : (item.phone_number || 'N/A'));
+        const sp = (item.sport && item.sport !== 'Sports') ? item.sport : ((existing.sport && existing.sport !== 'Sports') ? existing.sport : (item.primary_sport || 'Sports'));
 
-    // 2. Add local-only subscribers
-    localSubs.forEach(s => {
-        const em = (s.email || '').toLowerCase().trim();
-        if (em && !combinedMap.has(em)) {
-            combinedMap.set(em, {
-                ...s,
-                full_name: s.full_name || s.name || 'VIP Subscriber',
-                phone: s.phone || s.phone_number || 'N/A',
-                sport: s.sport || s.primary_sport || 'Sports'
-            });
+        combinedMap.set(em, {
+            ...existing,
+            ...item,
+            full_name: fn,
+            email: em,
+            phone: ph,
+            sport: sp,
+            created_at: existing.created_at || item.created_at || new Date().toISOString()
+        });
+    };
+
+    // 1. Process Newsletter table entries
+    dbNewsletter.forEach(mergeSub);
+
+    // 2. Process Registrations table entries (matching VIP Pass)
+    dbRegistrations.forEach(item => {
+        if (item.message && item.message.includes('VIP')) {
+            mergeSub(item);
         }
     });
+
+    // 3. Process Subscribers table entries
+    dbSubscribers.forEach(mergeSub);
+
+    // 4. Process Local Storage entries
+    localSubs.forEach(mergeSub);
 
     allSubscribers = Array.from(combinedMap.values());
     allSubscribers.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
