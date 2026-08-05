@@ -100,24 +100,72 @@ function updateNavAuth(user) {
         authModal.style.display = 'none';
         syncUserRegistration(user);
 
-        // If user came from booking flow, restore slot details & re-open Confirm Booking Box
+        // Restore pending booking popup immediately upon sign in (self-contained for deployment resilience)
         setTimeout(() => {
             if (typeof window.restorePendingBooking === 'function') {
                 window.restorePendingBooking();
             } else {
-                const confirmPopup = document.getElementById('slot-confirm-popup');
-                if (window.pendingSlotBooking && confirmPopup) {
-                    confirmPopup.style.display = 'flex';
-                    window.pendingSlotBooking = false;
-                }
+                restorePendingSlotBookingSelfContained();
             }
-        }, 300);
+        }, 200);
     } else {
         navAuthArea.innerHTML = `${adminBtn}<button id="open-auth-modal" class="nav-auth-btn">Sign In</button>`;
 
         if (navAdminLink) navAdminLink.style.display = 'inline-block';
         if (navAuthLink) navAuthLink.textContent = 'Sign In';
     }
+}
+
+// Self-contained restore helper for deployment resilience
+function restorePendingSlotBookingSelfContained() {
+    try {
+        const pending = sessionStorage.getItem('pending_slot_booking');
+        if (!pending) return false;
+        const data = JSON.parse(pending);
+        if (data && data.selectedSlot) {
+            const scpSport = document.getElementById('scp-sport');
+            const scpLoc   = document.getElementById('scp-location');
+            const scpDate  = document.getElementById('scp-date');
+            const scpTime  = document.getElementById('scp-time');
+            const scpPrice = document.getElementById('scp-price');
+
+            if (scpSport && data.currentSport) scpSport.textContent = data.currentSport;
+            if (scpLoc && data.currentLocation)   scpLoc.textContent = data.currentLocation;
+            if (scpDate && data.selectedDate)  scpDate.textContent = data.selectedDate;
+
+            if (scpTime && data.selectedSlot.startMin) {
+                const duration = data.currentDuration || 60;
+                const fmt = (totalMin) => {
+                    const normalizedMin = totalMin % 1440;
+                    const h24 = Math.floor(normalizedMin / 60);
+                    const min = normalizedMin % 60;
+                    const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
+                    const mStr = min === 0 ? '00' : String(min).padStart(2, '0');
+                    const ampm = h24 < 12 ? 'AM' : 'PM';
+                    return { time: `${h12}:${mStr}`, period: ampm };
+                };
+                const st = fmt(data.selectedSlot.startMin);
+                const et = fmt(data.selectedSlot.startMin + duration);
+                scpTime.textContent = `${st.time} ${st.period} - ${et.time} ${et.period}`;
+            }
+
+            if (scpPrice && data.selectedSlot.price) {
+                const duration = data.currentDuration || 60;
+                const total = data.selectedSlot.price * (duration / 60);
+                scpPrice.textContent = `₹${total}`;
+            }
+
+            const confirmPopup = document.getElementById('slot-confirm-popup');
+            if (confirmPopup) {
+                confirmPopup.style.display = 'flex';
+            }
+            sessionStorage.removeItem('pending_slot_booking');
+            return true;
+        }
+    } catch (e) {
+        console.error('Error restoring pending slot booking in supabase-client:', e);
+    }
+    return false;
 }
 
 // ── Auth Click Event Delegation ──────────────────────────────────────────────
