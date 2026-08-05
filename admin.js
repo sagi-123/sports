@@ -207,7 +207,7 @@ async function loadAllData() {
 
 refreshBtn.addEventListener('click', loadAllData);
 
-// 1. Fetch Registrations (Merge Supabase DB + Local Storage)
+// 1. Fetch Registrations (Merge Supabase DB + Local Storage with Deduplication)
 async function fetchRegistrations() {
     let dbRegs = [];
     try {
@@ -217,9 +217,25 @@ async function fetchRegistrations() {
         console.warn('Error fetching registrations from DB:', err.message);
     }
     const localRegs = JSON.parse(localStorage.getItem('apex_elite_registrations_mock') || '[]');
-    const existingEmails = new Set(dbRegs.map(r => (r.email || '').toLowerCase().trim()));
-    const localOnly = localRegs.filter(r => r.email && !existingEmails.has((r.email || '').toLowerCase().trim()));
-    allRegistrations = [...dbRegs, ...localOnly];
+    
+    // Deduplicate by email so the same person NEVER appears twice!
+    const uniqueMap = new Map();
+
+    dbRegs.forEach(r => {
+        const em = (r.email || '').toLowerCase().trim();
+        if (em && !uniqueMap.has(em)) {
+            uniqueMap.set(em, r);
+        }
+    });
+
+    localRegs.forEach(r => {
+        const em = (r.email || '').toLowerCase().trim();
+        if (em && !uniqueMap.has(em)) {
+            uniqueMap.set(em, r);
+        }
+    });
+
+    allRegistrations = Array.from(uniqueMap.values());
     allRegistrations.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
 }
 
@@ -326,44 +342,59 @@ async function fetchBookings() {
 // CRUD: Delete Registration
 async function deleteRegistration(id, email) {
     if (!confirm('Are you sure you want to delete this trial registration?')) return;
+    const em = (email || '').toLowerCase().trim();
     
-    let success = false;
+    // 1. Delete from Supabase database by ID and email
     try {
-        const { error } = await db.from('registrations').delete().eq('email', email);
-        if (!error) success = true;
+        if (id && !String(id).startsWith('local-')) {
+            await db.from('registrations').delete().eq('id', id);
+        }
+        if (em) {
+            await db.from('registrations').delete().eq('email', email);
+        }
     } catch (err) {
-        console.error('Database delete failed, running local delete:', err);
+        console.error('Database delete failed:', err);
     }
 
-    // Fallback: local mockup handling
-    allRegistrations = allRegistrations.filter(r => r.email !== email);
-    localStorage.setItem('apex_elite_registrations_mock', JSON.stringify(allRegistrations));
-    success = true;
-
-    if (success) {
-        loadAllData();
+    // 2. Delete from LocalStorage mock to prevent returning on refresh
+    try {
+        const localRegs = JSON.parse(localStorage.getItem('apex_elite_registrations_mock') || '[]');
+        const updatedLocal = localRegs.filter(r => 
+            r.id !== id && 
+            ((r.email || '').toLowerCase().trim() !== em)
+        );
+        localStorage.setItem('apex_elite_registrations_mock', JSON.stringify(updatedLocal));
+    } catch (e) {
+        console.error('LocalStorage delete error:', e);
     }
+
+    allRegistrations = allRegistrations.filter(r => 
+        r.id !== id && 
+        ((r.email || '').toLowerCase().trim() !== em)
+    );
+
+    loadAllData();
 }
 
 // CRUD: Delete Subscriber
 async function deleteSubscriber(email) {
     if (!confirm('Are you sure you want to unsubscribe this email address?')) return;
+    const em = (email || '').toLowerCase().trim();
     
-    let success = false;
+    // 1. Delete from all Supabase subscriber tables
+    try { await db.from('subscribers').delete().eq('email', email); } catch (err) {}
+    try { await db.from('newsletter').delete().eq('email', email); } catch (err) {}
+    try { await db.from('registrations').delete().eq('email', email); } catch (err) {}
+
+    // 2. Delete from LocalStorage mock
     try {
-        const { error } = await db.from('newsletter').delete().eq('email', email);
-        if (!error) success = true;
-    } catch (err) {
-        console.error('Database delete failed:', err);
-    }
+        const localSubs = JSON.parse(localStorage.getItem('apex_elite_subscribers_mock') || '[]');
+        const updatedLocal = localSubs.filter(s => (s.email || '').toLowerCase().trim() !== em);
+        localStorage.setItem('apex_elite_subscribers_mock', JSON.stringify(updatedLocal));
+    } catch (e) {}
 
-    allSubscribers = allSubscribers.filter(s => s.email !== email);
-    localStorage.setItem('apex_elite_subscribers_mock', JSON.stringify(allSubscribers));
-    success = true;
-
-    if (success) {
-        loadAllData();
-    }
+    allSubscribers = allSubscribers.filter(s => (s.email || '').toLowerCase().trim() !== em);
+    loadAllData();
 }
 
 // CRUD: Cancel Booking
