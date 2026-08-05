@@ -564,6 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error inside openConfirmPopup:", e);
         }
     }
+    window.openConfirmPopup = openConfirmPopup;
 
     function closeConfirmPopup() {
         if (!confirmPopup) return;
@@ -690,28 +691,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentDuration = data.currentDuration || currentDuration;
                 selectedDate = data.selectedDate || selectedDate;
 
-                // Pre-fill confirm popup summary fields
-                const scpSport = document.getElementById('scp-sport');
-                const scpLoc   = document.getElementById('scp-location');
-                const scpDate  = document.getElementById('scp-date');
-                const scpTime  = document.getElementById('scp-time');
-                const scpPrice = document.getElementById('scp-price');
-
-                if (scpSport) scpSport.textContent = currentSport;
-                if (scpLoc)   scpLoc.textContent = currentLocation;
-                if (scpDate)  scpDate.textContent = selectedDate;
-                
-                const st = fmtTime(selectedSlot.startMin);
-                const et = fmtTime(selectedSlot.startMin + currentDuration);
-                if (scpTime) scpTime.textContent = `${st.time} ${st.period} - ${et.time} ${et.period}`;
-                
-                const total = selectedSlot.price * (currentDuration / 60);
-                if (scpPrice) scpPrice.textContent = `₹${total}`;
-
-                const confirmPopup = document.getElementById('slot-confirm-popup');
-                if (confirmPopup) {
-                    confirmPopup.style.display = 'flex';
-                }
+                openConfirmPopup();
                 sessionStorage.removeItem('pending_slot_booking');
                 return true;
             }
