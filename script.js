@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Menu Toggle
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
-    
+
     if (hamburger) {
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
@@ -27,6 +27,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Hero 3-Photo Carousel Navigation
+    const carouselTrack = document.getElementById('hero-carousel-track');
+    const prevBtn = document.getElementById('hero-carousel-prev');
+    const nextBtn = document.getElementById('hero-carousel-next');
+
+    if (carouselTrack && prevBtn && nextBtn) {
+        prevBtn.addEventListener('click', () => {
+            carouselTrack.scrollBy({ left: -140, behavior: 'smooth' });
+        });
+        nextBtn.addEventListener('click', () => {
+            carouselTrack.scrollBy({ left: 140, behavior: 'smooth' });
+        });
+    }
+
     // Smooth Scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -36,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.classList.contains('open-slots')) { e.preventDefault(); return; }
             e.preventDefault();
             navLinks.classList.remove('active'); // Close mobile menu if open
-            if(hamburger) {
+            if (hamburger) {
                 const icon = hamburger.querySelector('i');
                 icon.classList.remove('fa-times');
                 icon.classList.add('fa-bars');
@@ -97,11 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Scroll Reveal Animation
     const revealElements = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
-    
+
     const revealOnScroll = () => {
         const windowHeight = window.innerHeight;
         const revealPoint = 100;
-        
+
         revealElements.forEach(el => {
             const revealTop = el.getBoundingClientRect().top;
             if (revealTop < windowHeight - revealPoint) {
@@ -109,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     };
-    
+
     window.addEventListener('scroll', revealOnScroll);
     revealOnScroll(); // Trigger on load
 
@@ -122,14 +136,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!statsSection) return;
         const sectionTop = statsSection.getBoundingClientRect().top;
         const windowHeight = window.innerHeight;
-        
+
         if (sectionTop < windowHeight - 100 && !started) {
             started = true;
             statNumbers.forEach(stat => {
                 const target = +stat.getAttribute('data-target');
                 const duration = 2000; // ms
                 const increment = target / (duration / 16); // 60fps
-                
+
                 let current = 0;
                 const updateCounter = () => {
                     current += increment;
@@ -153,55 +167,55 @@ document.addEventListener('DOMContentLoaded', () => {
     //  SLOT BOOKING MODAL
     // ═══════════════════════════════════════════════════════════════════════
 
-    const slotModal         = document.getElementById('slot-modal');
-    const closeSlotModal    = document.getElementById('close-slot-modal');
-    const slotModalHero     = document.getElementById('slot-modal-hero');
-    const slotSportIcon     = document.getElementById('slot-sport-icon');
-    const slotModalTitle    = document.getElementById('slot-modal-title');
-    const slotDurToggle     = document.getElementById('slot-duration-toggle');
-    const slotGrid          = document.getElementById('slot-grid');
-    const slotSummary       = document.getElementById('slot-summary');
-    const confirmSlotBtn    = document.getElementById('confirm-slot-btn');
-    const slotBookMsg       = document.getElementById('slot-book-msg');
-    const summaryDate       = document.getElementById('summary-date');
-    const summaryTime       = document.getElementById('summary-time');
-    const summaryDuration   = document.getElementById('summary-duration');
-    const summarySport      = document.getElementById('summary-sport');
-    const summarySpIcon     = document.getElementById('summary-sport-icon');
-    const summaryLocation   = document.getElementById('summary-location');
-    const slotLocToggle     = document.getElementById('slot-location-toggle');
+    const slotModal = document.getElementById('slot-modal');
+    const closeSlotModal = document.getElementById('close-slot-modal');
+    const slotModalHero = document.getElementById('slot-modal-hero');
+    const slotSportIcon = document.getElementById('slot-sport-icon');
+    const slotModalTitle = document.getElementById('slot-modal-title');
+    const slotDurToggle = document.getElementById('slot-duration-toggle');
+    const slotGrid = document.getElementById('slot-grid');
+    const slotSummary = document.getElementById('slot-summary');
+    const confirmSlotBtn = document.getElementById('confirm-slot-btn');
+    const slotBookMsg = document.getElementById('slot-book-msg');
+    const summaryDate = document.getElementById('summary-date');
+    const summaryTime = document.getElementById('summary-time');
+    const summaryDuration = document.getElementById('summary-duration');
+    const summarySport = document.getElementById('summary-sport');
+    const summarySpIcon = document.getElementById('summary-sport-icon');
+    const summaryLocation = document.getElementById('summary-location');
+    const slotLocToggle = document.getElementById('slot-location-toggle');
     // Confirm Popup elements
-    const confirmPopup      = document.getElementById('slot-confirm-popup');
-    const scpClose          = document.getElementById('scp-close');
-    const scpSportIcon      = document.getElementById('scp-sport-icon');
-    const scpSportName      = document.getElementById('scp-sport-name');
-    const scpLocation       = document.getElementById('scp-location');
-    const scpDate           = document.getElementById('scp-date');
-    const scpTime           = document.getElementById('scp-time');
-    const scpDuration       = document.getElementById('scp-duration');
-    const scpConfirmBtn     = document.getElementById('scp-confirm-btn');
-    const scpMsg            = document.getElementById('scp-msg');
+    const confirmPopup = document.getElementById('slot-confirm-popup');
+    const scpClose = document.getElementById('scp-close');
+    const scpSportIcon = document.getElementById('scp-sport-icon');
+    const scpSportName = document.getElementById('scp-sport-name');
+    const scpLocation = document.getElementById('scp-location');
+    const scpDate = document.getElementById('scp-date');
+    const scpTime = document.getElementById('scp-time');
+    const scpDuration = document.getElementById('scp-duration');
+    const scpConfirmBtn = document.getElementById('scp-confirm-btn');
+    const scpMsg = document.getElementById('scp-msg');
     // Calendar elements
-    const dateTrigger       = document.getElementById('slot-date-trigger');
-    const dateTriggerLabel  = document.getElementById('slot-date-trigger-label');
-    const dateChevron       = document.getElementById('slot-date-chevron');
-    const calPopup          = document.getElementById('slot-calendar-popup');
-    const calMonthLabel     = document.getElementById('cal-month-label');
-    const calGrid           = document.getElementById('cal-grid');
-    const calPrev           = document.getElementById('cal-prev');
-    const calNext           = document.getElementById('cal-next');
+    const dateTrigger = document.getElementById('slot-date-trigger');
+    const dateTriggerLabel = document.getElementById('slot-date-trigger-label');
+    const dateChevron = document.getElementById('slot-date-chevron');
+    const calPopup = document.getElementById('slot-calendar-popup');
+    const calMonthLabel = document.getElementById('cal-month-label');
+    const calGrid = document.getElementById('cal-grid');
+    const calPrev = document.getElementById('cal-prev');
+    const calNext = document.getElementById('cal-next');
 
     // State
-    let currentSport    = '';
+    let currentSport = '';
     let currentLocation = 'Chennai';
     let currentDuration = 30;
-    let selectedDate    = null;
-    let selectedSlot    = null;
-    let calViewDate     = new Date(); // month currently shown in calendar
+    let selectedDate = null;
+    let selectedSlot = null;
+    let calViewDate = new Date(); // month currently shown in calendar
 
-    const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const DAY_NAMES_LONG = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const DAY_NAMES_LONG = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     // ── Calendar popup ──────────────────────────────────────────────────────
 
@@ -233,15 +247,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderCalendar() {
         const today = new Date();
-        today.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
 
-        const year  = calViewDate.getFullYear();
+        const year = calViewDate.getFullYear();
         const month = calViewDate.getMonth();
 
         calMonthLabel.textContent = `${MONTH_NAMES[month]} ${year}`;
 
         // First day of month & total days
-        const firstDay   = new Date(year, month, 1).getDay(); // 0=Sun
+        const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         calGrid.innerHTML = '';
@@ -255,16 +269,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let d = 1; d <= daysInMonth; d++) {
             const cellDate = new Date(year, month, d);
-            const dateStr  = getLocalDateStr(cellDate);
-            const isPast   = cellDate < today;
-            const isToday  = cellDate.getTime() === today.getTime();
+            const dateStr = getLocalDateStr(cellDate);
+            const isPast = cellDate < today;
+            const isToday = cellDate.getTime() === today.getTime();
             const isSelected = dateStr === selectedDate;
 
             const cell = document.createElement('button');
             cell.className = 'cal-cell' +
-                (isPast    ? ' cal-past'     : '') +
-                (isToday   ? ' cal-today'    : '') +
-                (isSelected? ' cal-selected' : '');
+                (isPast ? ' cal-past' : '') +
+                (isToday ? ' cal-today' : '') +
+                (isSelected ? ' cal-selected' : '');
             cell.textContent = d;
             cell.disabled = isPast;
             cell.dataset.date = dateStr;
@@ -294,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const prevMonth = new Date(calViewDate.getFullYear(), calViewDate.getMonth() - 1, 1);
             // Don't go before current month
             if (prevMonth.getFullYear() > today.getFullYear() ||
-               (prevMonth.getFullYear() === today.getFullYear() && prevMonth.getMonth() >= today.getMonth())) {
+                (prevMonth.getFullYear() === today.getFullYear() && prevMonth.getMonth() >= today.getMonth())) {
                 calViewDate = prevMonth;
                 renderCalendar();
             }
@@ -327,9 +341,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /** Initialize date state for the modal (today pre-selected) */
     function initDatePicker() {
         const today = new Date();
-        today.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
         selectedDate = getLocalDateStr(today);
-        calViewDate  = new Date(today);
+        calViewDate = new Date(today);
         const [yr, mo, dy] = selectedDate.split('-').map(Number);
         const dObj = new Date(yr, mo - 1, dy);
         dateTriggerLabel.textContent = `${DAY_NAMES_LONG[dObj.getDay()]}, ${MONTH_SHORT[dObj.getMonth()]} ${dy}, ${yr}`;
@@ -355,9 +369,9 @@ document.addEventListener('DOMContentLoaded', () => {
     /** Convert total minutes to a 12-hour formatted object e.g. 330 → { time:"5:30", period:"AM" } */
     function fmtTime(totalMin) {
         const normalizedMin = totalMin % 1440;
-        const h24  = Math.floor(normalizedMin / 60);
-        const min  = normalizedMin % 60;
-        const h12  = h24 % 12 === 0 ? 12 : h24 % 12;
+        const h24 = Math.floor(normalizedMin / 60);
+        const min = normalizedMin % 60;
+        const h12 = h24 % 12 === 0 ? 12 : h24 % 12;
         const mStr = min === 0 ? '00' : String(min).padStart(2, '0');
         const ampm = h24 < 12 ? 'AM' : 'PM';
         return { time: `${h12}:${mStr}`, period: ampm };
@@ -374,7 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .select('start_time, duration')
                     .eq('sport', currentSport)
                     .eq('booking_date', selectedDate);
-                
+
                 if (!error && data) {
                     data.forEach(booking => {
                         const startMin = parseTimeStr(booking.start_time);
@@ -446,9 +460,9 @@ document.addEventListener('DOMContentLoaded', () => {
         filteredTimeslots.forEach(slotObj => {
             const slotTimeStr = slotObj.slot_time;
             const currentSlotStart = parseTimeStr(slotTimeStr);
-            const slotEnd    = currentSlotStart + currentDuration;
-            const start      = fmtTime(currentSlotStart);
-            const end        = fmtTime(slotEnd);
+            const slotEnd = currentSlotStart + currentDuration;
+            const start = fmtTime(currentSlotStart);
+            const end = fmtTime(slotEnd);
 
             const samePeriod = start.period === end.period;
             const rangeLabel = samePeriod
@@ -481,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tile.style.background = 'rgba(255, 77, 77, 0.15)';
                 tile.style.border = '1px solid rgba(255, 77, 77, 0.4)';
                 tile.style.color = '#ff4d4d';
-                
+
                 const sep = tile.querySelector('.slot-range-sep');
                 if (sep) {
                     sep.textContent = 'Booked';
@@ -513,8 +527,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Format date nicely
         const [yr, mo, dy] = selectedDate.split('-').map(Number);
         const dObj = new Date(yr, mo - 1, dy);
-        const dayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         summaryDate.textContent = `${dayNames[dObj.getDay()]}, ${monthNames[dObj.getMonth()]} ${dy}`;
 
         summaryTime.textContent = selectedSlot.label;
@@ -544,18 +558,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Fill popup details
             const [yr, mo, dy] = selectedDate.split('-').map(Number);
             const dObj = new Date(yr, mo - 1, dy);
-            const dayNames   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-            const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
             if (scpSportIcon && slotSportIcon) {
                 scpSportIcon.className = slotSportIcon.className;
             }
-            if (scpSportName)  scpSportName.textContent = currentSport;
-            if (scpLocation)   scpLocation.textContent  = currentLocation;
-            if (scpDate)       scpDate.textContent       = `${dayNames[dObj.getDay()]}, ${monthNames[dObj.getMonth()]} ${dy}`;
-            if (scpTime)       scpTime.textContent       = selectedSlot.label;
-            if (scpDuration)   scpDuration.textContent   = currentDuration === 30 ? '30 Minutes' : currentDuration === 60 ? '1 Hour' : '2 Hours';
-            if (scpMsg)        { scpMsg.textContent = ''; scpMsg.style.color = ''; }
+            if (scpSportName) scpSportName.textContent = currentSport;
+            if (scpLocation) scpLocation.textContent = currentLocation;
+            if (scpDate) scpDate.textContent = `${dayNames[dObj.getDay()]}, ${monthNames[dObj.getMonth()]} ${dy}`;
+            if (scpTime) scpTime.textContent = selectedSlot.label;
+            if (scpDuration) scpDuration.textContent = currentDuration === 30 ? '30 Minutes' : currentDuration === 60 ? '1 Hour' : '2 Hours';
+            if (scpMsg) { scpMsg.textContent = ''; scpMsg.style.color = ''; }
             if (scpConfirmBtn) { scpConfirmBtn.disabled = false; scpConfirmBtn.innerHTML = 'Confirm Booking <i class="fas fa-check"></i>'; }
 
             confirmPopup.style.display = 'flex';
@@ -679,7 +693,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Global helper to restore pending slot booking after sign in
-    window.restorePendingBooking = function() {
+    window.restorePendingBooking = function () {
         try {
             const pending = sessionStorage.getItem('pending_slot_booking');
             if (!pending) return false;
@@ -844,7 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tabSignin) tabSignin.style.display = 'block';
                     if (tabSignup) tabSignup.style.display = 'none';
                 }
-                
+
                 slotBookMsg.className = 'slot-book-msg';
                 slotBookMsg.style.color = '#ff4d4d';
                 slotBookMsg.textContent = '🔒 Please Sign In to book a slot!';
@@ -920,11 +934,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if button has data-sport attribute for specific sport
             const sportData = openBtn.dataset.sport || 'Badminton';
             const sportIconMap = {
-                'Football':  { icon: 'fas fa-futbol',         img: 'assets/football_action.png' },
-                'Cricket':   { icon: 'fas fa-baseball-ball',  img: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80' },
-                'Basketball':{ icon: 'fas fa-basketball-ball',img: 'assets/basketball_action.png' },
-                'Badminton': { icon: 'fas fa-feather',        img: 'assets/about_training.png' },
-                'Volleyball':{ icon: 'fas fa-volleyball-ball',img: 'assets/hero_volleyball.png' }
+                'Football': { icon: 'fas fa-futbol', img: 'assets/football_action.png' },
+                'Cricket': { icon: 'fas fa-baseball-ball', img: 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=800&q=80' },
+                'Basketball': { icon: 'fas fa-basketball-ball', img: 'assets/basketball_action.png' },
+                'Badminton': { icon: 'fas fa-feather', img: 'assets/about_training.png' },
+                'Volleyball': { icon: 'fas fa-volleyball-ball', img: 'assets/hero_volleyball.png' }
             };
             const { icon, img } = sportIconMap[sportData] || sportIconMap['Badminton'];
             openSlotModal(sportData, img, icon);
@@ -951,7 +965,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (starRatingInput && ratingValueInput) {
         const stars = starRatingInput.querySelectorAll('i');
-        
+
         stars.forEach(star => {
             star.addEventListener('click', () => {
                 selectedRating = parseInt(star.dataset.rating, 10);
@@ -1175,7 +1189,7 @@ async function loadAdminGallery() {
     // Clear all gallery grids and populate each with dynamic items
     galleryGrids.forEach((grid) => {
         grid.innerHTML = '';
-        
+
         finalImages.forEach((img) => {
             if (!img.image_url) return;
 
@@ -1186,7 +1200,7 @@ async function loadAdminGallery() {
             imgEl.src = img.image_url;
             imgEl.alt = img.caption || 'Gallery Image';
             imgEl.loading = 'lazy';
-            imgEl.onerror = function() {
+            imgEl.onerror = function () {
                 item.style.display = 'none';
             };
 
@@ -1271,7 +1285,7 @@ function openGalleryLightbox(img) {
 
 function escapeHTMLGallery(str) {
     if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 // ── Facility category filters with smooth GSAP animations ───────────────────
@@ -1348,7 +1362,7 @@ function initFacilityFilters() {
             const allCards = document.querySelectorAll('.fac-card');
             allCards.forEach(c => c.classList.remove('active'));
             cardsToShow[0].classList.add('active');
-            
+
             // Scroll carousel back to start
             if (carouselContainer) {
                 carouselContainer.scrollTo({
@@ -1397,7 +1411,7 @@ function initFacilitiesCarousel() {
             const tiltX = (normalizedY * -15).toFixed(2);
 
             card.style.transform = `perspective(1000px) rotateY(${tiltY}deg) rotateX(${tiltX}deg) scale3d(1.04, 1.04, 1.04) translateY(-8px)`;
-            
+
             const shine = card.querySelector('.fac-glass-shine');
             if (shine) {
                 shine.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 255, 255, 0.15) 0%, transparent 60%)`;
@@ -1464,8 +1478,8 @@ function initFacilitiesCarousel() {
         bookBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const sport = card.dataset.sport || 'Sport';
-            const img   = card.dataset.img   || '';
-            const icon  = card.dataset.icon  || 'fas fa-star';
+            const img = card.dataset.img || '';
+            const icon = card.dataset.icon || 'fas fa-star';
             window.openSlotModal(sport, img, icon);
         });
     });
@@ -1476,20 +1490,20 @@ function initFacilitiesCarousel() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 function initTestimonialCarousel() {
-    const track      = document.getElementById('testimonial-track');
-    const slides     = track ? Array.from(track.querySelectorAll('.testimonial-slide')) : [];
-    const prevBtn    = document.getElementById('tc-prev');
-    const nextBtn    = document.getElementById('tc-next');
-    const dots       = Array.from(document.querySelectorAll('.tc-dot'));
-    const wrapper    = document.querySelector('.testimonial-carousel-wrapper');
+    const track = document.getElementById('testimonial-track');
+    const slides = track ? Array.from(track.querySelectorAll('.testimonial-slide')) : [];
+    const prevBtn = document.getElementById('tc-prev');
+    const nextBtn = document.getElementById('tc-next');
+    const dots = Array.from(document.querySelectorAll('.tc-dot'));
+    const wrapper = document.querySelector('.testimonial-carousel-wrapper');
     const navContainer = document.querySelector('.tc-nav-container');
 
     if (!track || slides.length === 0 || !wrapper) return;
 
-    let current       = 0;
+    let current = 0;
     let autoplayTimer = null;
     const AUTOPLAY_MS = 4500;
-    const GAP_PX      = 24;    // visual gap between cards (matches slide padding*2)
+    const GAP_PX = 24;    // visual gap between cards (matches slide padding*2)
 
     // ─── How many cards to show at once ───────────────────────────
     function getSPV() {
@@ -1498,14 +1512,14 @@ function initTestimonialCarousel() {
 
     // ─── Set each slide's explicit pixel width based on wrapper ───
     function setSlideSizes() {
-        const spv        = getSPV();
-        const wrapperW   = wrapper.clientWidth;
+        const spv = getSPV();
+        const wrapperW = wrapper.clientWidth;
         // Each slide = (wrapperWidth - totalGaps) / slidesPerView
-        const totalGaps  = GAP_PX * (spv - 1);
-        const slideW     = (wrapperW - totalGaps) / spv;
+        const totalGaps = GAP_PX * (spv - 1);
+        const slideW = (wrapperW - totalGaps) / spv;
 
         slides.forEach(slide => {
-            slide.style.width   = slideW + 'px';
+            slide.style.width = slideW + 'px';
             slide.style.padding = '0';   // remove padding-based gap approach
         });
 
@@ -1570,7 +1584,7 @@ function initTestimonialCarousel() {
         const inViewport = rect.top < window.innerHeight && rect.bottom > 0;
         if (!inViewport) return;
         if (e.key === 'ArrowRight') { resetAutoplay(); next(); }
-        if (e.key === 'ArrowLeft')  { resetAutoplay(); prev(); }
+        if (e.key === 'ArrowLeft') { resetAutoplay(); prev(); }
     });
 
     // ─── Touch / swipe ─────────────────────────────────────────────
@@ -1585,7 +1599,7 @@ function initTestimonialCarousel() {
 
     // ─── Autoplay ──────────────────────────────────────────────────
     function startAutoplay() { autoplayTimer = setInterval(next, AUTOPLAY_MS); }
-    function stopAutoplay()  { clearInterval(autoplayTimer); }
+    function stopAutoplay() { clearInterval(autoplayTimer); }
     function resetAutoplay() { stopAutoplay(); startAutoplay(); }
 
     // Pause on hover
@@ -1772,7 +1786,7 @@ async function loadAndInitReviews() {
 
 function escapeHTMLReview(str) {
     if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1783,15 +1797,15 @@ document.addEventListener('DOMContentLoaded', () => {
     (async function applyFestiveOfferSettings() {
         const LS_KEY = 'apex_festive_offer';
         const DB_KEY = 'festive_offer';
-        const bar    = document.getElementById('top-festive-bar');
-        const nav    = document.querySelector('.nav-wrapper');
+        const bar = document.getElementById('top-festive-bar');
+        const nav = document.querySelector('.nav-wrapper');
         if (!bar) return;
 
         function showBanner(s) {
             const textEl = bar.querySelector('.festive-text');
-            const ctaEl  = bar.querySelector('.festive-cta-btn');
+            const ctaEl = bar.querySelector('.festive-cta-btn');
             if (textEl) textEl.innerHTML = `${s.message} Use Code: <span class="festive-code">${s.code}</span>`;
-            if (ctaEl)  ctaEl.innerHTML  = `${s.cta} <i class="fas fa-bolt"></i>`;
+            if (ctaEl) ctaEl.innerHTML = `${s.cta} <i class="fas fa-bolt"></i>`;
             bar.classList.remove('hidden');
             if (nav) nav.classList.add('with-festive-bar');
         }
@@ -1807,7 +1821,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (lsSettings && lsSettings.enabled) {
                 showBanner(lsSettings);
             }
-        } catch(e) {}
+        } catch (e) { }
 
         // 2. Fetch ground truth from Supabase
         try {
@@ -1829,7 +1843,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             }
-        } catch(e) {
+        } catch (e) {
             console.warn('[FestiveOffer] Supabase fetch error:', e);
         }
 
@@ -1861,12 +1875,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const closeFestiveBtn = document.getElementById('close-festive-bar');
     const festiveBar = document.getElementById('top-festive-bar');
     const navWrapper = document.querySelector('.nav-wrapper');
-    
+
     if (closeFestiveBtn && festiveBar) {
         closeFestiveBtn.addEventListener('click', () => {
             festiveBar.classList.add('hidden');
             if (navWrapper) {
                 navWrapper.classList.remove('with-festive-bar');
+            }
+        });
+    }
+
+    // Mobile Hamburger Menu Toggle
+    const hamburgerBtn = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+
+    if (hamburgerBtn && navLinks) {
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+            const icon = hamburgerBtn.querySelector('i');
+            if (icon) {
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            }
+        });
+
+        // Close drawer when clicking any link
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                const icon = hamburgerBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+
+        // Close drawer when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+                const icon = hamburgerBtn.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
             }
         });
     }

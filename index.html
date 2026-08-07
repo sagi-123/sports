@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css?v=15.0">
+    <link rel="stylesheet" href="styles.css?v=18.0">
 </head>
 <body class="light-theme">
 
@@ -112,19 +112,13 @@
     <!-- ═══════════════════════════════════════════════════
          TOP FESTIVE OFFER BANNER ABOVE NAVBAR
          ═══════════════════════════════════════════════════ -->
-    <div id="top-festive-bar" class="top-festive-bar hidden">
+    <div id="top-festive-bar" class="top-festive-bar">
         <div class="festive-bar-content">
             <span class="festive-badge"><i class="fas fa-gift"></i> FESTIVE OFFER</span>
             <span class="festive-text">
-                🎉 Special Deal: Get <strong>20% OFF</strong> on all Slot Bookings! Use Code: <span class="festive-code">FESTIVE20</span>
+                Get <strong>10% OFF</strong> on all Slot Bookings! Use Code: <span class="festive-code">SAGIABU10</span>
             </span>
-            <button class="festive-cta-btn open-slots">
-                Claim Offer <i class="fas fa-bolt"></i>
-            </button>
         </div>
-        <button id="close-festive-bar" class="festive-close-btn" aria-label="Close offer banner">
-            <i class="fas fa-times"></i>
-        </button>
     </div>
 
     <!-- ═══════════════════════════════════════════════════
@@ -133,13 +127,18 @@
     <header class="nav-wrapper">
         <nav class="navbar floating-navbar">
             <div class="nav-container">
-                <!-- Left: Premium Logo -->
+                <!-- Hamburger toggle icon for mobile (Left) -->
+                <div class="hamburger">
+                    <i class="fas fa-bars"></i>
+                </div>
+
+                <!-- Logo (Center on mobile) -->
                 <a href="#home" class="logo">
                     <span class="logo-icon"><i class="fas fa-futbol"></i></span>
                     <span class="logo-text">APEX<span class="text-emerald">ELITE</span></span>
                 </a>
 
-                <!-- Center Nav Links -->
+                <!-- Center Nav Links (Desktop) -->
                 <ul class="nav-links">
                     <li><a href="#home" class="active">Home</a></li>
                     <li><a href="#about">About Us</a></li>
@@ -149,17 +148,13 @@
                     <li><a href="#testimonials">Testimonials</a></li>
                 </ul>
 
-                <!-- Right Action Area -->
+                <!-- Right Action Area (Book Now on mobile) -->
                 <div class="nav-right-actions">
                     <div id="nav-auth-area" style="display:inline-flex;align-items:center;gap:12px;"></div>
 
                     <button class="btn btn-emerald nav-book-now open-slots">
                         Book Now
                     </button>
-
-                    <div class="hamburger">
-                        <i class="fas fa-bars"></i>
-                    </div>
                 </div>
             </div>
         </nav>
@@ -171,7 +166,7 @@
 
     <section id="home" class="hero-section">
 
-        <!-- LEFT: White Content Panel -->
+        <!-- LEFT: Content Panel -->
         <div class="hero-left-panel">
             <span class="hero-eyebrow">⚽ PREMIUM SPORTS TURF</span>
 
@@ -182,7 +177,7 @@
             </h1>
 
             <p class="hero-description">
-                Experience the best-in-class sports turfs<br>built for performance, passion and memories.
+                Experience the best-in-class sports turfs built for performance, passion and memories.
             </p>
 
             <div class="hero-cta-group">
@@ -190,8 +185,43 @@
                     <i class="fas fa-calendar-check"></i> Book Your Slot
                 </button>
                 <a href="#facilities" class="btn btn-outline-emerald btn-hero-explore">
-                    Explore Facilities
+                    <i class="fas fa-building"></i> Explore Facilities
                 </a>
+            </div>
+
+            <!-- Mobile & Desktop Featured Arena Turf Banner -->
+            <div class="hero-featured-banner">
+                <img src="assets/hero_bright_daylight.png" alt="ApexElite Bright Daylight Turf Field">
+            </div>
+
+            <!-- 3-Photo Horizontal Carousel Row with Arrow Buttons -->
+            <div class="hero-photo-carousel-wrapper">
+                <button class="carousel-arrow prev-btn" id="hero-carousel-prev" aria-label="Previous Photo">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="hero-photo-carousel-track" id="hero-carousel-track">
+                    <div class="carousel-photo-card">
+                        <img src="assets/hero_friends_playing.png" alt="Friends playing football on turf">
+                    </div>
+                    <div class="carousel-photo-card">
+                        <img src="assets/hero_night_turf.png" alt="Football turf at night with LED floodlights">
+                    </div>
+                    <div class="carousel-photo-card">
+                        <img src="assets/hero_trophy.png" alt="Championship trophy on football turf">
+                    </div>
+                </div>
+                <button class="carousel-arrow next-btn" id="hero-carousel-next" aria-label="Next Photo">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+
+            <!-- Carousel Pagination Dots -->
+            <div class="hero-carousel-dots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
             </div>
 
             <!-- Stats Cards Row -->
@@ -225,39 +255,24 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- RIGHT: Clean Panel — Photo Cards + Booking Card -->
-        <div class="hero-right-visual">
-
-            <!-- Scattered Polaroid Photo Cards -->
-            <div class="photo-card photo-card-1">
-                <img src="assets/hero_friends_playing.png" alt="Friends playing football on turf">
-            </div>
-            <div class="photo-card photo-card-2">
-                <img src="assets/hero_night_turf.png" alt="Football turf at night with LED floodlights">
-            </div>
-            <div class="photo-card photo-card-3">
-                <img src="assets/hero_trophy.png" alt="Championship trophy on football turf">
-            </div>
-
-            <!-- Floating Booking Card -->
-            <div class="floating-booking-card">
+            <!-- Solid Green Booking Card for Mobile & Desktop -->
+            <div class="floating-booking-card green-theme-card">
                 <h3 class="booking-card-title">
-                    <i class="fas fa-calendar-check text-emerald"></i> BOOK YOUR GAME
+                    <i class="fas fa-calendar-check text-white"></i> BOOK YOUR GAME
                 </h3>
                 <div class="booking-card-form">
                     <div class="form-field">
-                        <label for="hero-date-input">
-                            <i class="fas fa-calendar-day text-emerald"></i> Select Date
+                        <label for="hero-date-input" class="text-white">
+                            <i class="fas fa-calendar-day text-emerald-light"></i> SELECT DATE
                         </label>
-                        <input type="date" id="hero-date-input" class="card-input">
+                        <input type="date" id="hero-date-input" class="card-input white-input">
                     </div>
                     <div class="form-field">
-                        <label for="hero-time-select">
-                            <i class="fas fa-clock text-emerald"></i> Select Time
+                        <label for="hero-time-select" class="text-white">
+                            <i class="fas fa-clock text-emerald-light"></i> SELECT TIME
                         </label>
-                        <select id="hero-time-select" class="card-input">
+                        <select id="hero-time-select" class="card-input white-input">
                             <option>06:00 AM – 07:00 AM</option>
                             <option>07:00 AM – 08:00 AM</option>
                             <option>05:00 PM – 06:00 PM</option>
@@ -266,10 +281,10 @@
                         </select>
                     </div>
                     <div class="form-field">
-                        <label for="hero-players-select">
-                            <i class="fas fa-users text-emerald"></i> Players
+                        <label for="hero-players-select" class="text-white">
+                            <i class="fas fa-users text-emerald-light"></i> PLAYERS
                         </label>
-                        <select id="hero-players-select" class="card-input">
+                        <select id="hero-players-select" class="card-input white-input">
                             <option>5 v 5 (10 Players)</option>
                             <option>7 v 7 (14 Players)</option>
                             <option>Individual Court</option>
@@ -280,8 +295,20 @@
                     </button>
                 </div>
             </div>
+        </div>
 
-        </div><!-- END hero-right-visual -->
+        <!-- RIGHT: Desktop Background Visual Panel -->
+        <div class="hero-right-visual desktop-only-visual">
+            <div class="photo-card photo-card-1">
+                <img src="assets/hero_friends_playing.png" alt="Friends playing football on turf">
+            </div>
+            <div class="photo-card photo-card-2">
+                <img src="assets/hero_night_turf.png" alt="Football turf at night with LED floodlights">
+            </div>
+            <div class="photo-card photo-card-3">
+                <img src="assets/hero_trophy.png" alt="Championship trophy on football turf">
+            </div>
+        </div>
 
     </section>
 
