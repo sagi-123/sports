@@ -3010,9 +3010,43 @@ select.dark-vip-input option {
 
 /* ── 1. TABLET & SMALL LAPTOP BREAKPOINT (Max Width: 992px) ── */
 @media (max-width: 992px) {
+    /* Mobile Top Festive Banner Bar (Compact 1-line height, zero overlap) */
+    .top-festive-bar {
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 0 10px !important;
+        font-size: 0.73rem !important;
+        line-height: 1 !important;
+        overflow: hidden !important;
+        background: linear-gradient(90deg, #09592e 0%, #0b6837 50%, #09592e 100%) !important;
+    }
+
+    .festive-bar-content {
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+    }
+
+    .festive-badge {
+        font-size: 0.64rem !important;
+        padding: 2px 6px !important;
+    }
+
+    .festive-text {
+        font-size: 0.72rem !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
     .nav-wrapper {
-        padding: 0 12px;
-        top: 8px;
+        padding: 0 10px !important;
+        top: 8px !important;
+    }
+
+    .nav-wrapper.with-festive-bar {
+        top: 38px !important;
     }
 
     .floating-navbar {
