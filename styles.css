@@ -390,7 +390,7 @@ ul {
 }
 
 .nav-wrapper.with-festive-bar {
-    top: 48px;
+    top: calc(var(--festive-bar-height, 40px) + 8px);
 }
 
 .floating-navbar {
@@ -3334,32 +3334,39 @@ select.dark-vip-input option {
     /* Top Festive Banner Bar */
     .top-festive-bar {
         height: auto !important;
-        min-height: 38px !important;
-        padding: 6px 14px !important;
-        font-size: 0.78rem !important;
+        min-height: 36px !important;
+        padding: 5px 12px !important;
+        font-size: 0.76rem !important;
         overflow: visible !important;
     }
 
     .festive-bar-content {
         flex-wrap: wrap !important;
         justify-content: center !important;
-        gap: 4px 8px !important;
+        gap: 3px 6px !important;
         text-align: center !important;
         white-space: normal !important;
         width: 100% !important;
     }
 
     .festive-text {
-        font-size: 0.76rem !important;
-        line-height: 1.3 !important;
+        font-size: 0.74rem !important;
+        line-height: 1.25 !important;
         white-space: normal !important;
         word-break: break-word !important;
         overflow: visible !important;
     }
 
+    .nav-wrapper.with-festive-bar {
+        top: calc(var(--festive-bar-height, 40px) + 6px) !important;
+    }
+
     /* Mobile Hero Title Typography */
     .hero-left-panel {
-        padding: 125px 18px 28px 18px !important;
+        padding-top: calc(var(--festive-bar-height, 40px) + 76px) !important;
+        padding-bottom: 28px !important;
+        padding-left: 18px !important;
+        padding-right: 18px !important;
         text-align: left !important;
     }
 

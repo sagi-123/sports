@@ -1,4 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Dynamic Festive Bar Height adjustment for Navbar & Hero positioning
+    function updateFestiveBarOffset() {
+        const festiveBar = document.getElementById('top-festive-bar');
+        if (festiveBar && festiveBar.offsetHeight > 0 && !festiveBar.classList.contains('hidden')) {
+            document.documentElement.style.setProperty('--festive-bar-height', `${festiveBar.offsetHeight}px`);
+        } else {
+            document.documentElement.style.setProperty('--festive-bar-height', '0px');
+        }
+    }
+    updateFestiveBarOffset();
+    window.addEventListener('resize', updateFestiveBarOffset);
+    window.addEventListener('load', updateFestiveBarOffset);
+
+    const festiveBarElem = document.getElementById('top-festive-bar');
+    if (festiveBarElem && window.ResizeObserver) {
+        new ResizeObserver(updateFestiveBarOffset).observe(festiveBarElem);
+    }
+
     // Navbar scroll effect
     const navbar = document.querySelector('.navbar, .floating-navbar');
     window.addEventListener('scroll', () => {
