@@ -3363,7 +3363,7 @@ select.dark-vip-input option {
 
     /* Mobile Hero Title Typography */
     .hero-left-panel {
-        padding-top: calc(var(--festive-bar-height, 40px) + 110px) !important;
+        padding-top: calc(var(--festive-bar-height, 40px) + 85px) !important;
         padding-bottom: 28px !important;
         padding-left: 18px !important;
         padding-right: 18px !important;
@@ -3542,7 +3542,7 @@ select.dark-vip-input option {
     }
 
     .hero-left-panel {
-        padding-top: calc(var(--festive-bar-height, 40px) + 105px) !important;
+        padding-top: calc(var(--festive-bar-height, 40px) + 82px) !important;
         padding-bottom: 28px !important;
         padding-left: 14px !important;
         padding-right: 14px !important;
