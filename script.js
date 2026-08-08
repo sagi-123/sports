@@ -27,31 +27,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Mobile Menu Toggle
+    // Global Mobile Menu Toggle Handler
+    window.toggleMobileMenu = function (e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        const navLinks = document.querySelector('.nav-links');
+        const hamburger = document.querySelector('.hamburger');
+        const icon = document.getElementById('hamburger-icon') || (hamburger ? hamburger.querySelector('i') : null);
+
+        if (navLinks) navLinks.classList.toggle('active');
+        if (hamburger) hamburger.classList.toggle('active');
+
+        if (icon && navLinks) {
+            if (navLinks.classList.contains('active')) {
+                icon.className = 'fas fa-times';
+            } else {
+                icon.className = 'fas fa-bars';
+            }
+        }
+    };
+
+    // Mobile Menu Toggle Event Listeners
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
-    if (hamburger && navLinks) {
+    if (hamburger) {
         hamburger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
-            const icon = hamburger.querySelector('i');
-            if (icon) {
-                if (navLinks.classList.contains('active')) {
-                    icon.className = 'fas fa-times';
-                } else {
-                    icon.className = 'fas fa-bars';
-                }
-            }
+            window.toggleMobileMenu(e);
         });
+    }
 
+    if (navLinks) {
         // Close mobile drawer when clicking outside
         document.addEventListener('click', (e) => {
-            if (navLinks.classList.contains('active') && !e.target.closest('.floating-navbar')) {
+            if (navLinks.classList.contains('active') && !e.target.closest('.floating-navbar') && !e.target.closest('.nav-links')) {
                 navLinks.classList.remove('active');
-                hamburger.classList.remove('active');
-                const icon = hamburger.querySelector('i');
+                if (hamburger) hamburger.classList.remove('active');
+                const icon = document.getElementById('hamburger-icon') || (hamburger ? hamburger.querySelector('i') : null);
                 if (icon) icon.className = 'fas fa-bars';
             }
         });

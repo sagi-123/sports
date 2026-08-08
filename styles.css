@@ -3133,17 +3133,17 @@ select.dark-vip-input option {
     .nav-links {
         display: none !important;
         flex-direction: column !important;
-        position: absolute !important;
-        top: calc(100% + 10px) !important;
-        left: 0 !important;
-        right: 0 !important;
+        position: fixed !important;
+        top: calc(var(--festive-bar-height, 40px) + 68px) !important;
+        left: 14px !important;
+        right: 14px !important;
         background: #FFFFFF !important;
         border: 1px solid var(--border-color) !important;
-        border-radius: 18px !important;
+        border-radius: 20px !important;
         padding: 16px !important;
         gap: 8px !important;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18) !important;
-        z-index: 1010 !important;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25) !important;
+        z-index: 9999 !important;
         pointer-events: auto !important;
     }
 
