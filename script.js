@@ -31,16 +31,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
 
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
             navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
             const icon = hamburger.querySelector('i');
-            if (navLinks.classList.contains('active')) {
-                icon.classList.remove('fa-bars');
-                icon.classList.add('fa-times');
-            } else {
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+            if (icon) {
+                if (navLinks.classList.contains('active')) {
+                    icon.className = 'fas fa-times';
+                } else {
+                    icon.className = 'fas fa-bars';
+                }
+            }
+        });
+
+        // Close mobile drawer when clicking outside
+        document.addEventListener('click', (e) => {
+            if (navLinks.classList.contains('active') && !e.target.closest('.floating-navbar')) {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+                const icon = hamburger.querySelector('i');
+                if (icon) icon.className = 'fas fa-bars';
             }
         });
     }
@@ -63,15 +75,24 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
-            if (targetId === '#') { e.preventDefault(); return; }
-            // Don't interfere with open-slots links
+            if (!targetId || targetId === '#') { e.preventDefault(); return; }
             if (this.classList.contains('open-slots')) { e.preventDefault(); return; }
+            
+            // If clicking logo on mobile, scroll home cleanly
+            if (this.classList.contains('logo')) {
+                e.preventDefault();
+                if (navLinks) navLinks.classList.remove('active');
+                const homeSec = document.querySelector('#home');
+                if (homeSec) homeSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
             e.preventDefault();
-            navLinks.classList.remove('active'); // Close mobile menu if open
+            if (navLinks) navLinks.classList.remove('active');
             if (hamburger) {
+                hamburger.classList.remove('active');
                 const icon = hamburger.querySelector('i');
-                icon.classList.remove('fa-times');
-                icon.classList.add('fa-bars');
+                if (icon) icon.className = 'fas fa-bars';
             }
             const target = document.querySelector(targetId);
             if (target) {
