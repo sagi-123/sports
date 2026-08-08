@@ -3,3 +3,5 @@ node_modules/
 *.log
 temp-*/
 victory-path-temp/
+
+.vercel
