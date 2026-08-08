@@ -461,6 +461,11 @@ ul {
     gap: 12px;
 }
 
+/* Mobile-only auth drawer links hidden on desktop */
+.mobile-only-auth-item {
+    display: none !important;
+}
+
 /* Desktop hamburger icon hidden by default */
 .hamburger {
     display: none;
@@ -3168,6 +3173,34 @@ select.dark-vip-input option {
         color: var(--text-black);
         background: #F8FAFC;
         transition: var(--transition);
+    }
+
+    .mobile-only-auth-item {
+        display: block !important;
+        margin-top: 4px;
+    }
+
+    .nav-mobile-admin-link {
+        background: #DCFCE7 !important;
+        color: #16A34A !important;
+        border: 1px solid #BBF7D0 !important;
+        font-weight: 800 !important;
+    }
+
+    .nav-mobile-admin-link:hover {
+        background: #16A34A !important;
+        color: #FFFFFF !important;
+    }
+
+    .nav-mobile-auth-link {
+        background: #F1F5F9 !important;
+        color: #0F172A !important;
+        font-weight: 800 !important;
+    }
+
+    .nav-mobile-auth-link:hover {
+        background: #16A34A !important;
+        color: #FFFFFF !important;
     }
 
     .nav-links a:hover,

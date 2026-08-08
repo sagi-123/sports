@@ -84,20 +84,31 @@ function updateNavAuth(user) {
 
     const navAdminLink = document.getElementById('nav-admin-link');
     const navAuthLink = document.getElementById('nav-auth-link');
+    const mobileAuthLink = document.getElementById('mobile-nav-auth-link');
 
     if (user) {
         const name = user.user_metadata?.full_name || user.email.split('@')[0];
-        navAuthArea.innerHTML = `
-            ${adminBtn}
-            <div class="nav-user" style="display:inline-flex;align-items:center;gap:10px;">
-                <span class="nav-user-name" style="font-weight:700;font-size:0.85rem;">👋 ${name}</span>
-                <button class="nav-auth-btn" id="signout-btn">Sign Out</button>
-            </div>`;
+        if (navAuthArea) {
+            navAuthArea.innerHTML = `
+                ${adminBtn}
+                <div class="nav-user" style="display:inline-flex;align-items:center;gap:10px;">
+                    <span class="nav-user-name" style="font-weight:700;font-size:0.85rem;">👋 ${name}</span>
+                    <button class="nav-auth-btn" id="signout-btn">Sign Out</button>
+                </div>`;
+        }
+
+        if (mobileAuthLink) {
+            mobileAuthLink.innerHTML = `<i class="fas fa-sign-out-alt"></i> Sign Out (👋 ${name})`;
+            mobileAuthLink.onclick = (e) => {
+                e.preventDefault();
+                db.auth.signOut().then(() => window.location.reload());
+            };
+        }
 
         if (navAdminLink) navAdminLink.style.display = 'inline-block';
         if (navAuthLink) navAuthLink.textContent = 'Sign Out';
 
-        authModal.style.display = 'none';
+        if (authModal) authModal.style.display = 'none';
         syncUserRegistration(user);
 
         // Restore pending booking popup immediately upon sign in (self-contained for deployment resilience)
@@ -109,7 +120,17 @@ function updateNavAuth(user) {
             }
         }, 200);
     } else {
-        navAuthArea.innerHTML = `${adminBtn}<button id="open-auth-modal" class="nav-auth-btn">Sign In</button>`;
+        if (navAuthArea) {
+            navAuthArea.innerHTML = `${adminBtn}<button id="open-auth-modal" class="nav-auth-btn">Sign In</button>`;
+        }
+
+        if (mobileAuthLink) {
+            mobileAuthLink.innerHTML = `<i class="fas fa-sign-in-alt"></i> Sign In`;
+            mobileAuthLink.onclick = (e) => {
+                e.preventDefault();
+                if (authModal) authModal.style.display = 'flex';
+            };
+        }
 
         if (navAdminLink) navAdminLink.style.display = 'inline-block';
         if (navAuthLink) navAuthLink.textContent = 'Sign In';
